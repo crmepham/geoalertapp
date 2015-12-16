@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -7,6 +7,13 @@
     android:background="@color/loginBackground"
     android:orientation="vertical"
     tools:context="crm.geoalertapp.RegisterActivity">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true"
+        android:background="@color/loginBackground"
+        android:orientation="vertical"
+        tools:context="crm.geoalertapp.RegisterActivity">
 
     <ImageView
         android:id="@+id/logo"
@@ -14,7 +21,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/vetical_margin_medium"
         android:layout_gravity="center"
-        android:src="@drawable/iconLight"/>
+        android:src="@drawable/icon_light"/>
 
     <EditText
         android:layout_width="@dimen/centerWidth"
@@ -22,7 +29,8 @@
         android:layout_marginTop="@dimen/vetical_margin_small"
         android:inputType="textPersonName"
         android:backgroundTint="@color/inputColour"
-        android:text="username"
+        android:hint="username"
+        android:textColorHint="@color/inputColour"
         android:textColor="@color/inputColour"
         android:ems="10"
         android:id="@+id/registerUsername"
@@ -34,8 +42,9 @@
     android:layout_marginTop="@dimen/vetical_margin_small"
     android:inputType="text"
     android:backgroundTint="@color/inputColour"
-    android:text="password"
-    android:textColor="@color/inputColour"
+    android:hint="password"
+    android:textColorHint="@color/inputColour"
+        android:textColor="@color/inputColour"
     android:ems="10"
     android:id="@+id/registerPassword"
     android:layout_gravity="center_horizontal" />
@@ -46,7 +55,8 @@
         android:layout_marginTop="@dimen/vetical_margin_small"
         android:inputType="text"
         android:backgroundTint="@color/inputColour"
-        android:text="confirm password"
+        android:hint="confirm password"
+        android:textColorHint="@color/inputColour"
         android:textColor="@color/inputColour"
         android:ems="10"
         android:id="@+id/registerPasswordConfirm"
@@ -58,7 +68,8 @@
         android:layout_marginTop="@dimen/vetical_margin_small"
         android:inputType="textEmailAddress"
         android:backgroundTint="@color/inputColour"
-        android:text="email"
+        android:hint="email"
+        android:textColorHint="@color/inputColour"
         android:textColor="@color/inputColour"
         android:ems="10"
         android:id="@+id/registerEmail"
@@ -69,7 +80,8 @@
         android:layout_marginTop="@dimen/vetical_margin_small"
         android:inputType="textEmailAddress"
         android:backgroundTint="@color/inputColour"
-        android:text="confirm email"
+        android:hint="confirm email"
+        android:textColorHint="@color/inputColour"
         android:textColor="@color/inputColour"
         android:ems="10"
         android:id="@+id/registerEmailConfirm"
@@ -87,6 +99,7 @@
 
     <TextView
         android:layout_marginTop="@dimen/vetical_margin_medium"
+        android:layout_marginBottom="@dimen/vetical_margin_medium"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
@@ -94,17 +107,7 @@
         android:textColor="@color/inputColour"
         android:textSize="@dimen/smallLink"
         android:id="@+id/loginLink"
-        android:layout_gravity="center_horizontal" />
-
-    <TextView
-        android:layout_marginTop="@dimen/vetical_margin_medium"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Help"
-        android:textColor="@color/inputColour"
-        android:textSize="@dimen/smallLink"
-        android:id="@+id/helpLink"
-        android:layout_gravity="center_horizontal" />
-
-</LinearLayout>
+        android:layout_gravity="center_horizontal"
+        android:onClick="navigateToLoginActivity"/>
+    </LinearLayout>
+</ScrollView>
