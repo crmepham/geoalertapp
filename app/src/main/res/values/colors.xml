@@ -3,4 +3,12 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+    <color name="loginBackground">#262626</color>
+
+
+    <!-- font colours -->
+    <color name="inputColour">#545556</color>
+
+    <!-- buttons -->
+    <color name="darkButton">#1f1f1f</color>
 </resources>

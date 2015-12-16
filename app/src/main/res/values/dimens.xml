@@ -1,4 +1,18 @@
 <resources>
+    <!-- Vertical margins -->
+    <dimen name="vetical_margin_small">16dp</dimen>
+    <dimen name="vetical_margin_medium">32dp</dimen>
+    <dimen name="vetical_margin_large">64dp</dimen>
+
+    <!-- Widths -->
+    <dimen name="centerWidth">200dp</dimen>
+    <dimen name="centerButtonWidth">210dp</dimen>
+
+    <!-- Heights -->
+    <dimen name="centerButtonHeight">60dp</dimen>
+
+    <!-- Font sizes  -->
+    <dimen name="smallLink">15dp</dimen>
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>

@@ -6,7 +6,7 @@
     android:fitsSystemWindows="true"
     android:background="@color/loginBackground"
     android:orientation="vertical"
-    tools:context="crm.geoalertapp.LoginActivity">
+    tools:context="crm.geoalertapp.RegisterActivity">
 
     <ImageView
         android:id="@+id/logo"
@@ -25,19 +25,54 @@
         android:text="username"
         android:textColor="@color/inputColour"
         android:ems="10"
-        android:id="@+id/inputUsername"
+        android:id="@+id/registerUsername"
+        android:layout_gravity="center_horizontal" />
+
+    <EditText
+    android:layout_width="@dimen/centerWidth"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/vetical_margin_small"
+    android:inputType="text"
+    android:backgroundTint="@color/inputColour"
+    android:text="password"
+    android:textColor="@color/inputColour"
+    android:ems="10"
+    android:id="@+id/registerPassword"
+    android:layout_gravity="center_horizontal" />
+
+    <EditText
+        android:layout_width="@dimen/centerWidth"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/vetical_margin_small"
+        android:inputType="text"
+        android:backgroundTint="@color/inputColour"
+        android:text="confirm password"
+        android:textColor="@color/inputColour"
+        android:ems="10"
+        android:id="@+id/registerPasswordConfirm"
         android:layout_gravity="center_horizontal" />
 
     <EditText
         android:layout_width="@dimen/centerWidth"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/vetical_margin_small"
-        android:inputType="textPassword"
+        android:inputType="textEmailAddress"
         android:backgroundTint="@color/inputColour"
-        android:text="username"
+        android:text="email"
         android:textColor="@color/inputColour"
         android:ems="10"
-        android:id="@+id/inputPassword"
+        android:id="@+id/registerEmail"
+        android:layout_gravity="center_horizontal" />
+    <EditText
+        android:layout_width="@dimen/centerWidth"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/vetical_margin_small"
+        android:inputType="textEmailAddress"
+        android:backgroundTint="@color/inputColour"
+        android:text="confirm email"
+        android:textColor="@color/inputColour"
+        android:ems="10"
+        android:id="@+id/registerEmailConfirm"
         android:layout_gravity="center_horizontal" />
 
     <Button
@@ -46,8 +81,8 @@
         android:layout_height="@dimen/centerButtonHeight"
         android:background="@android:drawable/dialog_holo_dark_frame"
         android:textColor="@color/inputColour"
-        android:text="Login"
-        android:id="@+id/loginButton"
+        android:text="Register"
+        android:id="@+id/registerButton"
         android:layout_gravity="center_horizontal" />
 
     <TextView
@@ -55,10 +90,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Register an account"
+        android:text="Login"
         android:textColor="@color/inputColour"
         android:textSize="@dimen/smallLink"
-        android:id="@+id/ResisterAccountLink"
+        android:id="@+id/loginLink"
         android:layout_gravity="center_horizontal" />
 
     <TextView
@@ -71,6 +106,5 @@
         android:textSize="@dimen/smallLink"
         android:id="@+id/helpLink"
         android:layout_gravity="center_horizontal" />
-
 
 </LinearLayout>
