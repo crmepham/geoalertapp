@@ -6,14 +6,14 @@
     android:fitsSystemWindows="true"
     android:background="@color/loginBackground"
     android:orientation="vertical"
-    tools:context="crm.geoalertapp.RegisterActivity">
+    tools:context=".activities.RegisterActivity">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fitsSystemWindows="true"
         android:background="@color/loginBackground"
         android:orientation="vertical"
-        tools:context="crm.geoalertapp.RegisterActivity">
+        tools:context=".activities.RegisterActivity">
 
     <ImageView
         android:id="@+id/logo"
@@ -40,7 +40,7 @@
     android:layout_width="@dimen/centerWidth"
     android:layout_height="wrap_content"
     android:layout_marginTop="@dimen/vetical_margin_small"
-    android:inputType="text"
+    android:inputType="textPassword"
     android:backgroundTint="@color/inputColour"
     android:hint="password"
     android:textColorHint="@color/inputColour"
@@ -53,7 +53,7 @@
         android:layout_width="@dimen/centerWidth"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/vetical_margin_small"
-        android:inputType="text"
+        android:inputType="textPassword"
         android:backgroundTint="@color/inputColour"
         android:hint="confirm password"
         android:textColorHint="@color/inputColour"

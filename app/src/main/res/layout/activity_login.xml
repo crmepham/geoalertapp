@@ -6,7 +6,7 @@
     android:fitsSystemWindows="true"
     android:background="@color/loginBackground"
     android:orientation="vertical"
-    tools:context="crm.geoalertapp.LoginActivity">
+    tools:context=".activities.LoginActivity">
 
     <ImageView
         android:id="@+id/logo"
@@ -33,10 +33,10 @@
         android:layout_width="@dimen/centerWidth"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/vetical_margin_small"
-        android:inputType="textPersonName"
+        android:inputType="textPassword"
         android:backgroundTint="@color/inputColour"
         android:textColor="@color/inputColour"
-        android:hint="username"
+        android:hint="password"
         android:textColorHint="@color/inputColour"
         android:ems="10"
         android:id="@+id/inputPassword"
