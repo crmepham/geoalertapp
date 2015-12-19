@@ -98,11 +98,8 @@ public class LoginActivity extends AppCompatActivity {
         protected void onPreExecute() {
             super.onPreExecute();
             SharedPreferences sharedPreferences = getSharedPreferences("prefs", MODE_PRIVATE);;
-            if(toast == null) {
-                toast = Toast.makeText(getApplicationContext(), "", Toast.LENGTH_SHORT);
-            }
-            toast.setText("Logging in.");
-            toast.show();
+            progress = ProgressDialog.show(LoginActivity.this, "", "Logging in. Please wait...", true);
+            progress.show();
         }
 
         @Override
@@ -111,17 +108,20 @@ public class LoginActivity extends AppCompatActivity {
         }
 
         protected void onPostExecute(Integer result) {
+            progress.dismiss();
             if(result == 200) {
-                //SharedPreferences.Editor editor = getSharedPreferences("prefs",MODE_PRIVATE).edit();
-                //editor.putBoolean("loggedIn", true);
                 SharedPreferencesService.setLoggedIn(getApplicationContext(), true);
 
                 Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
                 startActivity(intent);
             }else{
-                toast.setText("Incorrect login details: " + result);
+                if(toast == null) {
+                    toast = Toast.makeText(getApplicationContext(), "", Toast.LENGTH_SHORT);
+                }
+                toast.setText("Incorrect login details.");
+                toast.show();
             }
-            toast.show();
+
         }
     }
 }

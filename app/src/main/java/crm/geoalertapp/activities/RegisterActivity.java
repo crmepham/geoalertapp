@@ -1,5 +1,6 @@
 package crm.geoalertapp.activities;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -20,6 +21,7 @@ import crm.geoalertapp.crm.geoalertapp.utilities.SharedPreferencesService;
 public class RegisterActivity extends AppCompatActivity {
 
     Toast toast;
+    ProgressDialog progress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,8 +90,9 @@ public class RegisterActivity extends AppCompatActivity {
             if(toast == null) {
                 toast = Toast.makeText(getApplicationContext(), "", Toast.LENGTH_SHORT);
             }
-            toast.setText("Registering...");
-            toast.show();
+            progress = ProgressDialog.show(RegisterActivity.this, "",
+                    "Registering. Please wait...", true);
+            progress.show();
         }
 
         @Override
@@ -98,14 +101,16 @@ public class RegisterActivity extends AppCompatActivity {
         }
 
         protected void onPostExecute(Integer result) {
-            if(result == 200) {
+            progress.dismiss();
+            if(result == 201) {
                 //SharedPreferencesService.setLoggedIn(getApplicationContext(), true);
                 //Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
                 //startActivity(intent);
             }else{
-                toast.setText("Unable to register at this time: " + result);
+                toast.setText("Unable to register, that user already exists.");
+                toast.show();
             }
-            toast.show();
+
         }
     }
 }
