@@ -96,7 +96,7 @@ public class ForgotPasswordActivityStep3 extends AppCompatActivity {
         protected void onPostExecute(Integer result) {
             progress.dismiss();
             if(result == 201) {
-                Intent intent = new Intent(ForgotPasswordActivityStep3.this, RegisterActivity.class);
+                Intent intent = new Intent(ForgotPasswordActivityStep3.this, ContactsActivity.class);
                 startActivity(intent);
             }else{
                 if(toast == null) {

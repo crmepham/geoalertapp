@@ -36,7 +36,7 @@ public class LoginActivity extends AppCompatActivity {
         SharedPreferencesService.removeKey(getApplicationContext(), "loggedIn");
         // check loggedIn here
         if(loggedIn){
-            setContentView(R.layout.activity_register);
+            setContentView(R.layout.activity_contacts);
         }else{
             setContentView(R.layout.activity_login);
         }
@@ -112,7 +112,7 @@ public class LoginActivity extends AppCompatActivity {
             progress.dismiss();
             if(result == 200) {
                 SharedPreferencesService.setBooleanProperty(getApplicationContext(), "loggedIn", true);
-                Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
+                Intent intent = new Intent(LoginActivity.this, ContactsActivity.class);
                 startActivity(intent);
             }else{
                 if(toast == null) {

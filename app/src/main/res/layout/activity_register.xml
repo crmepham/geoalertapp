@@ -135,17 +135,6 @@
         android:layout_gravity="center_horizontal"
         android:onClick="registerAccount"/>
 
-    <Button
-        android:layout_marginTop="@dimen/vetical_margin_medium"
-        android:layout_width="@dimen/centerButtonWidth"
-        android:layout_height="@dimen/centerButtonHeight"
-        android:background="@android:drawable/dialog_holo_dark_frame"
-        android:textColor="@color/inputColour"
-        android:text="Logout"
-        android:id="@+id/logoutButton"
-        android:layout_gravity="center_horizontal"
-        android:onClick="logout"/>
-
     <TextView
         android:layout_marginTop="@dimen/vetical_margin_medium"
         android:layout_marginBottom="@dimen/vetical_margin_medium"

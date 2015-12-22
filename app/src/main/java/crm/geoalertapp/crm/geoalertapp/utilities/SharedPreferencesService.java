@@ -44,5 +44,6 @@ public class SharedPreferencesService {
     {
         SharedPreferences.Editor editor = getSharedPreferences(ctx).edit();
         editor.clear();
+        editor.commit();
     }
 }

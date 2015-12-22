@@ -52,12 +52,6 @@ public class RegisterActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public void logout(View view) {
-        SharedPreferencesService.clearAllProperties(getApplicationContext());
-        Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
-        startActivity(intent);
-    }
-
     public void registerAccount(View view) {
         EditText tv = (EditText) findViewById(R.id.registerUsername);
         String username = tv.getText().toString();
@@ -138,8 +132,8 @@ public class RegisterActivity extends AppCompatActivity {
             progress.dismiss();
             if(result == 201) {
                 SharedPreferencesService.setBooleanProperty(getApplicationContext(), "loggedIn", true);
-                //Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
-                //startActivity(intent);
+                Intent intent = new Intent(RegisterActivity.this, ContactsActivity.class);
+                startActivity(intent);
             }else{
                 toast.setText("Unable to register, that user already exists.");
                 toast.show();
