@@ -87,6 +87,43 @@
         android:id="@+id/registerEmailConfirm"
         android:layout_gravity="center_horizontal" />
 
+        <TextView
+            android:layout_marginTop="@dimen/vetical_margin_small"
+            android:layout_marginBottom="@dimen/vetical_margin_small"
+            android:layout_width="190dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textStyle="italic"
+            android:text="Select a security question"
+            android:ems="10"
+            android:textColor="@color/inputColour"
+            android:textSize="@dimen/smallLink"
+            android:layout_gravity="center_horizontal"/>
+
+        <Spinner
+            android:id="@+id/securityQuestions"
+            android:layout_width="@dimen/centerWidth"
+            android:layout_height="wrap_content"
+            android:prompt="@string/app_name"
+            android:gravity="center"
+            android:entries="@array/security_questions"
+            android:ems="10"
+            android:backgroundTint="@color/inputColour"
+            android:layout_gravity="center_horizontal"/>
+
+        <EditText
+            android:layout_width="@dimen/centerWidth"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/vetical_margin_small"
+            android:inputType="text"
+            android:backgroundTint="@color/inputColour"
+            android:hint="answer"
+            android:textColorHint="@color/inputColour"
+            android:textColor="@color/inputColour"
+            android:ems="10"
+            android:id="@+id/securityAnswer"
+            android:layout_gravity="center_horizontal" />
+
     <Button
         android:layout_marginTop="@dimen/vetical_margin_medium"
         android:layout_width="@dimen/centerButtonWidth"

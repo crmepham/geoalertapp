@@ -31,7 +31,7 @@
                 android:value=".activities.LoginActivity" />
         </activity>
         <activity
-            android:name=".activities.ForgotPasswordActivity"
+            android:name=".activities.ForgotPasswordActivityStep1"
             android:label="@string/title_activity_forgot_password"
             android:parentActivityName=".activities.LoginActivity"
             android:theme="@style/AppTheme.NoActionBar">
@@ -39,6 +39,28 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.LoginActivity" />
         </activity>
+        <activity
+            android:name=".activities.ForgotPasswordActivityStep2"
+            android:label="@string/title_activity_forgot_password_activity_step2"
+            android:parentActivityName=".activities.ForgotPasswordActivityStep1"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="crm.geoalertapp.activities.ForgotPasswordActivityStep1" />
+        </activity>
+        <activity
+            android:name=".activities.ForgotPasswordActivityStep3"
+            android:label="@string/title_activity_forgot_password_activity_step3"
+            android:parentActivityName=".activities.ForgotPasswordActivityStep2"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="crm.geoalertapp.activities.ForgotPasswordActivityStep2" />
+        </activity>
+        <activity
+            android:name=".activities.ContactsActivity"
+            android:label="@string/title_activity_contacts"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

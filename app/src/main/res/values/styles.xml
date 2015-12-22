@@ -17,4 +17,14 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+    <string-array name="security_questions">
+        <item>What is your mother\'s maiden name?</item>
+        <item>What was your first pets name?</item>
+        <item>What was your childhood nickname?</item>
+        <item>In what city does your nearest sibling live?</item>
+        <item>What is the middle name of your oldest child?</item>
+        <item>In what city was your first job?</item>
+        <item>What is the name of your first childhood friend?</item>
+    </string-array>
+
 </resources>

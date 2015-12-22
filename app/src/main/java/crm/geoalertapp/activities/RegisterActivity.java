@@ -9,19 +9,27 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 
-import java.net.MalformedURLException;
+import com.sun.jersey.core.util.MultivaluedMapImpl;
+
+import javax.ws.rs.core.MultivaluedMap;
 
 import crm.geoalertapp.R;
-import crm.geoalertapp.crm.geoalertapp.utilities.HTTPClient;
+import crm.geoalertapp.crm.geoalertapp.utilities.BaseHelper;
+import crm.geoalertapp.crm.geoalertapp.utilities.RestClient;
 import crm.geoalertapp.crm.geoalertapp.utilities.SharedPreferencesService;
+import crm.geoalertapp.crm.geoalertapp.utilities.StringEncrypter;
+import crm.geoalertapp.crm.geoalertapp.utilities.ValidationHelper;
 
 public class RegisterActivity extends AppCompatActivity {
 
     Toast toast;
     ProgressDialog progress;
+    Spinner spinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +38,13 @@ public class RegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_register);
+        addSecurityQuestions();
+    }
+
+    private void addSecurityQuestions() {
+        spinner = (Spinner) findViewById(R.id.securityQuestions);
+        ArrayAdapter adapter = ArrayAdapter.createFromResource(this, R.array.security_questions, R.layout.spinner_item);
+        spinner.setAdapter(adapter);
     }
 
     public void navigateToLoginActivity(View view) {
@@ -38,7 +53,7 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     public void logout(View view) {
-        SharedPreferencesService.removeKey(getApplicationContext(), "loggedIn");
+        SharedPreferencesService.clearAllProperties(getApplicationContext());
         Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
         startActivity(intent);
     }
@@ -54,8 +69,13 @@ public class RegisterActivity extends AppCompatActivity {
         String email = tv.getText().toString();
         tv = (EditText) findViewById(R.id.registerEmailConfirm);
         String confirmEmail = tv.getText().toString();
+        Spinner sp = (Spinner) findViewById(R.id.securityQuestions);
+        String securityQuestion = sp.getSelectedItem().toString();
+        tv = (EditText) findViewById(R.id.securityAnswer);
+        String securityAnswer = tv.getText().toString();
+        String t = securityAnswer;
 
-        String[] validationErrors = HTTPClient.validateRegistrationCredentials(username, password, confirmPassword, email, confirmEmail);
+        String[] validationErrors = ValidationHelper.validateRegistrationCredentials(username, password, confirmPassword, email, confirmEmail, securityAnswer);
         if(validationErrors.length > 0){
             String errors = "";
             for(String error : validationErrors){
@@ -64,8 +84,13 @@ public class RegisterActivity extends AppCompatActivity {
             toast = Toast.makeText(getApplicationContext(), errors, Toast.LENGTH_LONG);
             toast.show();
         }else{
+            String contactNumber = BaseHelper.getContactNumber(getApplicationContext());
+            String lang = BaseHelper.getLanguage();
+            String encryptedSecurityAnswer = StringEncrypter.encrypt(securityAnswer);
+            String encryptedPassword = StringEncrypter.encrypt(password);
+
             RegisterTask registerTask = new RegisterTask();
-            registerTask.execute(username,password, email);
+            registerTask.execute(username, encryptedPassword, contactNumber, email, lang, securityQuestion, encryptedSecurityAnswer);
         }
     }
 
@@ -74,10 +99,19 @@ public class RegisterActivity extends AppCompatActivity {
         protected Integer doInBackground(String... params) {
 
             Integer responseCode = 0;
-            // attempt login via post request
             try {
-                responseCode = new HTTPClient("http://10.0.2.2:8080/geoalertserver/api/v1/user/register").Register(getApplicationContext(),"POST", params);
-            } catch (MalformedURLException e) {
+                MultivaluedMap map = new MultivaluedMapImpl();
+                map.add("username", params[0]);
+                map.add("password", params[1]);
+                map.add("contactNumber", params[2]);
+                map.add("email", params[3]);
+                map.add("lang", params[4]);
+                map.add("securityQuestion", params[5]);
+                map.add("securityAnswer", params[6]);
+
+                RestClient tc = new RestClient(map);
+                responseCode = tc.postForResponseCode("user/register");
+            } catch (Exception e) {
                 e.printStackTrace();
             }
             return responseCode;
@@ -103,7 +137,7 @@ public class RegisterActivity extends AppCompatActivity {
         protected void onPostExecute(Integer result) {
             progress.dismiss();
             if(result == 201) {
-                //SharedPreferencesService.setLoggedIn(getApplicationContext(), true);
+                SharedPreferencesService.setBooleanProperty(getApplicationContext(), "loggedIn", true);
                 //Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
                 //startActivity(intent);
             }else{

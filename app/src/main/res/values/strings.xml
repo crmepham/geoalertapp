@@ -9,4 +9,9 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="title_activity_test">TestActivity</string>
     <string name="title_activity_testing">TestingActivity</string>
+    <string name="title_activity_forgot_password_activity_step2">ForgotPasswordActivityStep2
+    </string>
+    <string name="title_activity_forgot_password_activity_step3">ForgotPasswordActivityStep3
+    </string>
+    <string name="title_activity_contacts">ContactsActivity</string>
 </resources>

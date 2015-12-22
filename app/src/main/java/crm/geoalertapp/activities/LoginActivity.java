@@ -1,25 +1,26 @@
 package crm.geoalertapp.activities;
 
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.Toast;
-import java.net.MalformedURLException;
+
+import com.sun.jersey.core.util.MultivaluedMapImpl;
+
+import javax.ws.rs.core.MultivaluedMap;
 
 import crm.geoalertapp.R;
-import crm.geoalertapp.crm.geoalertapp.utilities.HTTPClient;
+import crm.geoalertapp.crm.geoalertapp.utilities.RestClient;
 import crm.geoalertapp.crm.geoalertapp.utilities.SharedPreferencesService;
+import crm.geoalertapp.crm.geoalertapp.utilities.StringEncrypter;
+import crm.geoalertapp.crm.geoalertapp.utilities.ValidationHelper;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -31,7 +32,7 @@ public class LoginActivity extends AppCompatActivity {
         getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         super.onCreate(savedInstanceState);
-        boolean loggedIn = SharedPreferencesService.getLoggedIn(getApplicationContext());
+        boolean loggedIn = SharedPreferencesService.getBooleanProperty(getApplicationContext(), "loggedIn");
         SharedPreferencesService.removeKey(getApplicationContext(), "loggedIn");
         // check loggedIn here
         if(loggedIn){
@@ -42,29 +43,13 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        return super.onOptionsItemSelected(item);
-    }
-
     public void navigateToRegisterActivity(View view) {
         Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
         startActivity(intent);
     }
 
     public void navigateToForgotPasswordActivity(View view) {
-        Intent intent = new Intent(LoginActivity.this, ForgotPasswordActivity.class);
+        Intent intent = new Intent(LoginActivity.this, ForgotPasswordActivityStep1.class);
         startActivity(intent);
     }
 
@@ -75,8 +60,19 @@ public class LoginActivity extends AppCompatActivity {
         tv = (EditText) findViewById(R.id.inputPassword);
         String password = tv.getText().toString();
 
-        LoginTask loginTask = new LoginTask();
-        loginTask.execute(username,password);
+        String[] validationErrors = ValidationHelper.validateLoginCredentials(username, password);
+        if(validationErrors.length > 0){
+            String errors = "";
+            for(String error : validationErrors){
+                errors += error + "\n";
+            }
+            toast = Toast.makeText(getApplicationContext(), errors, Toast.LENGTH_LONG);
+            toast.show();
+        }else{
+            String encryptedPassword = StringEncrypter.encrypt(password);
+            LoginTask loginTask = new LoginTask();
+            loginTask.execute(username, encryptedPassword);
+        }
     }
 
 
@@ -87,8 +83,13 @@ public class LoginActivity extends AppCompatActivity {
             Integer responseCode = 0;
             // attempt login via post request
             try {
-               responseCode = new HTTPClient("http://10.0.2.2:8080/geoalertserver/api/v1/user/authenticate").Login(params[0], params[1], "POST");
-            } catch (MalformedURLException e) {
+                MultivaluedMap map = new MultivaluedMapImpl();
+                map.add("username", params[0]);
+                map.add("password", params[1]);
+
+                RestClient tc = new RestClient(map);
+                responseCode = tc.postForResponseCode("user/authenticate");
+            } catch (Exception e) {
                 e.printStackTrace();
             }
             return responseCode;
@@ -110,8 +111,7 @@ public class LoginActivity extends AppCompatActivity {
         protected void onPostExecute(Integer result) {
             progress.dismiss();
             if(result == 200) {
-                SharedPreferencesService.setLoggedIn(getApplicationContext(), true);
-
+                SharedPreferencesService.setBooleanProperty(getApplicationContext(), "loggedIn", true);
                 Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
                 startActivity(intent);
             }else{
