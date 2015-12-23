@@ -13,29 +13,19 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.TextView;
 
 import crm.geoalertapp.R;
 import crm.geoalertapp.crm.geoalertapp.utilities.SharedPreferencesService;
 
-public class ContactsActivity extends AppCompatActivity
+public class SettingsActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_contacts);
+        setContentView(R.layout.activity_settings);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -45,11 +35,6 @@ public class ContactsActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
-
-        View headerLayout = navigationView.getHeaderView(0);
-        TextView tv = (TextView) headerLayout.findViewById(R.id.nav_header_username);
-        tv.setText(SharedPreferencesService.getStringProperty(getApplicationContext(), "username"));
     }
 
     @Override
@@ -65,7 +50,7 @@ public class ContactsActivity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.contacts, menu);
+        getMenuInflater().inflate(R.menu.settings, menu);
         return true;
     }
 
@@ -78,7 +63,7 @@ public class ContactsActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            Intent intent = new Intent(ContactsActivity.this, SettingsActivity.class);
+            Intent intent = new Intent(SettingsActivity.this, SettingsActivity.class);
             startActivity(intent);
             return true;
         }
@@ -90,21 +75,20 @@ public class ContactsActivity extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
-
         Intent intent = new Intent();
         int id = item.getItemId();
 
         if (id == R.id.nav_activation) {
-            intent = new Intent(ContactsActivity.this, ActivationActivity.class);
+            intent = new Intent(SettingsActivity.this, ActivationActivity.class);
         } else if (id == R.id.nav_profile) {
-            intent = new Intent(ContactsActivity.this, ProfileActivity.class);
+            intent = new Intent(SettingsActivity.this, ProfileActivity.class);
         } else if (id == R.id.nav_contacts) {
-            intent = new Intent(ContactsActivity.this, ContactsActivity.class);
+            intent = new Intent(SettingsActivity.this, ContactsActivity.class);
         } else if (id == R.id.nav_settings) {
-            intent = new Intent(ContactsActivity.this, SettingsActivity.class);
+            intent = new Intent(SettingsActivity.this, SettingsActivity.class);
         } else if (id == R.id.nav_logout) {
             SharedPreferencesService.clearAllProperties(getApplicationContext());
-            intent = new Intent(ContactsActivity.this, LoginActivity.class);
+            intent = new Intent(SettingsActivity.this, LoginActivity.class);
             startActivity(intent);
         }
 

@@ -26,6 +26,7 @@ public class LoginActivity extends AppCompatActivity {
 
     Toast toast;
     ProgressDialog progress;
+    String username;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +57,7 @@ public class LoginActivity extends AppCompatActivity {
     public void loginButton(View view) {
 
         EditText tv = (EditText) findViewById(R.id.inputUsername);
-        String username = tv.getText().toString();
+        username = tv.getText().toString();
         tv = (EditText) findViewById(R.id.inputPassword);
         String password = tv.getText().toString();
 
@@ -112,6 +113,7 @@ public class LoginActivity extends AppCompatActivity {
             progress.dismiss();
             if(result == 200) {
                 SharedPreferencesService.setBooleanProperty(getApplicationContext(), "loggedIn", true);
+                SharedPreferencesService.setStringProperty(getApplication(), "username", username);
                 Intent intent = new Intent(LoginActivity.this, ContactsActivity.class);
                 startActivity(intent);
             }else{

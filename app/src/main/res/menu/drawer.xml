@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:title="Status">
+        <menu>
+            <item
+                android:id="@+id/nav_activation"
+                android:icon="@drawable/ic_settings_power_black_24dp"
+                android:title="Activation" />
+        </menu>
+    </item>
+
+
+    <item android:title="General">
+        <menu android:checkableBehavior="single">
+            <item
+                android:id="@+id/nav_profile"
+                android:icon="@drawable/ic_account_box_black_24dp"
+                android:title="My Profile" />
+            <item
+                android:id="@+id/nav_contacts"
+                android:icon="@drawable/ic_supervisor_account_black_24dp"
+                android:title="View Contacts" />
+            <item
+                android:id="@+id/nav_settings"
+                android:icon="@drawable/ic_menu_manage"
+                android:title="Settings" />
+            <item
+                android:id="@+id/nav_logout"
+                android:icon="@drawable/ic_exit_to_app_black_24dp"
+                android:title="Logout" />
+        </menu>
+    </item>
+
+
+
+
+</menu>
