@@ -62,7 +62,7 @@
             android:label="@string/title_activity_contacts"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".activities.ProfileActivity"
+            android:name=".activities.ProfileActivityold"
             android:label="@string/title_activity_profile"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
@@ -72,6 +72,10 @@
         <activity
             android:name=".activities.SettingsActivity"
             android:label="@string/title_activity_settings"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activities.ProfileActivity"
+            android:label="@string/title_activity_profile"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 

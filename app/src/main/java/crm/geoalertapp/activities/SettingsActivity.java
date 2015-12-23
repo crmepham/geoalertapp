@@ -2,9 +2,6 @@ package crm.geoalertapp.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -81,7 +78,7 @@ public class SettingsActivity extends AppCompatActivity
         if (id == R.id.nav_activation) {
             intent = new Intent(SettingsActivity.this, ActivationActivity.class);
         } else if (id == R.id.nav_profile) {
-            intent = new Intent(SettingsActivity.this, ProfileActivity.class);
+            intent = new Intent(SettingsActivity.this, ProfileActivityold.class);
         } else if (id == R.id.nav_contacts) {
             intent = new Intent(SettingsActivity.this, ContactsActivity.class);
         } else if (id == R.id.nav_settings) {

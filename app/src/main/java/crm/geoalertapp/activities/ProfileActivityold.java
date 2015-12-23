@@ -14,13 +14,13 @@ import android.view.MenuItem;
 import crm.geoalertapp.R;
 import crm.geoalertapp.crm.geoalertapp.utilities.SharedPreferencesService;
 
-public class ActivationActivity extends AppCompatActivity
+public class ProfileActivityold extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_activation);
+        setContentView(R.layout.activity_profile_old);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -47,7 +47,7 @@ public class ActivationActivity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.activation, menu);
+        getMenuInflater().inflate(R.menu.profile, menu);
         return true;
     }
 
@@ -60,7 +60,7 @@ public class ActivationActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            Intent intent = new Intent(ActivationActivity.this, SettingsActivity.class);
+            Intent intent = new Intent(ProfileActivityold.this, SettingsActivity.class);
             startActivity(intent);
             return true;
         }
@@ -72,21 +72,20 @@ public class ActivationActivity extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
-
         Intent intent = new Intent();
         int id = item.getItemId();
 
         if (id == R.id.nav_activation) {
-            intent = new Intent(ActivationActivity.this, ActivationActivity.class);
+            intent = new Intent(ProfileActivityold.this, ActivationActivity.class);
         } else if (id == R.id.nav_profile) {
-            intent = new Intent(ActivationActivity.this, ProfileActivityold.class);
+            intent = new Intent(ProfileActivityold.this, ProfileActivityold.class);
         } else if (id == R.id.nav_contacts) {
-            intent = new Intent(ActivationActivity.this, ContactsActivity.class);
+            intent = new Intent(ProfileActivityold.this, ContactsActivity.class);
         } else if (id == R.id.nav_settings) {
-            intent = new Intent(ActivationActivity.this, SettingsActivity.class);
+            intent = new Intent(ProfileActivityold.this, SettingsActivity.class);
         } else if (id == R.id.nav_logout) {
             SharedPreferencesService.clearAllProperties(getApplicationContext());
-            intent = new Intent(ActivationActivity.this, LoginActivity.class);
+            intent = new Intent(ProfileActivityold.this, LoginActivity.class);
             startActivity(intent);
         }
 
