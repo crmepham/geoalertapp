@@ -69,11 +69,16 @@ public class LoginActivity extends AppCompatActivity {
             }
             toast = Toast.makeText(getApplicationContext(), errors, Toast.LENGTH_LONG);
             toast.show();
-        }else{
+        }else if(ValidationHelper.isInternetConnected(getApplicationContext())){
             String encryptedPassword = StringEncrypter.encrypt(password);
             LoginTask loginTask = new LoginTask();
             loginTask.execute(username, encryptedPassword);
+        }else{
+            toast = Toast.makeText(getApplicationContext(), "", Toast.LENGTH_LONG);
+            toast.setText("No internet access.");
+            toast.show();
         }
+
     }
 
 
@@ -99,7 +104,7 @@ public class LoginActivity extends AppCompatActivity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            SharedPreferences sharedPreferences = getSharedPreferences("prefs", MODE_PRIVATE);;
+            SharedPreferences sharedPreferences = getSharedPreferences("prefs", MODE_PRIVATE);
             progress = ProgressDialog.show(LoginActivity.this, "", "Logging in. Please wait...", true);
             progress.show();
         }
@@ -116,11 +121,17 @@ public class LoginActivity extends AppCompatActivity {
                 SharedPreferencesService.setStringProperty(getApplication(), "username", username);
                 Intent intent = new Intent(LoginActivity.this, ContactsActivity.class);
                 startActivity(intent);
-            }else{
+            }else if(result == 401){
                 if(toast == null) {
                     toast = Toast.makeText(getApplicationContext(), "", Toast.LENGTH_SHORT);
                 }
                 toast.setText("Incorrect login details.");
+                toast.show();
+            }else{
+                if(toast == null) {
+                    toast = Toast.makeText(getApplicationContext(), "", Toast.LENGTH_SHORT);
+                }
+                toast.setText("Could not login at this time.");
                 toast.show();
             }
 

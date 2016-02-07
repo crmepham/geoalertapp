@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/loginBackground"
-    tools:context="crm.geoalertapp.activities.ProfileActivity$PlaceholderFragment">
+    tools:context=".activities.ProfileActivityOld$PlaceholderFragment">
 
     <TextView
         android:id="@+id/section_label"

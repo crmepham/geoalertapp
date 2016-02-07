@@ -1,5 +1,10 @@
 package crm.geoalertapp.crm.geoalertapp.utilities;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+
+import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -56,5 +61,24 @@ public class ValidationHelper extends BaseHelper {
             match = true;
         }
         return match;
+    }
+
+    public static String[] validateProfileInformation(List<String> info) {
+        List<String> errors = new ArrayList<>();
+        for(int i = 0, size = info.size(); i < size; i++) {
+            if(info.get(i).length() > 50){
+                errors.add("Invalid length (must be no more than 50 characters): "+info.get(i));
+            }
+            if(info.get(i).contains(",")){
+                errors.add("Invalid character (,): "+info.get(i)+")");
+            }
+            /*char[] array = string.toCharArray();
+            for(char c : array){
+                if(c == ','){
+                    errors.add("Invalid characters (,): " + string);
+                }
+            }*/
+        }
+        return errors.toArray(new String[errors.size()]);
     }
 }
