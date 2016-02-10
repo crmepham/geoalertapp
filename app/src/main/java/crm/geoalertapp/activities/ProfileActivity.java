@@ -13,6 +13,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -26,6 +27,7 @@ import android.widget.AbsListView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -59,18 +61,7 @@ public class ProfileActivity extends AppCompatActivity
         setContentView(R.layout.activity_profile);
 
         intent = getIntent();
-        if(ValidationHelper.isInternetConnected(getApplicationContext())) {
-            if(intent.getStringExtra("username") != null){
-                ProfilePicturetask profilePicturetask = new ProfilePicturetask();
-                profilePicturetask.execute(intent.getStringExtra("username"));
-            }
-
-        }else{
-            if(toast != null){
-                toast = Toast.makeText(getApplicationContext(), "", Toast.LENGTH_SHORT);
-                toast.setText("Could not retrieve profile data. No internet connection.");
-            }
-        }
+        load();
 
 
 
@@ -92,6 +83,32 @@ public class ProfileActivity extends AppCompatActivity
 
 
     }
+
+    private void load(){
+        if(ValidationHelper.isInternetConnected(getApplicationContext())) {
+            LinearLayout l = (LinearLayout) findViewById(R.id.profile_container);
+            l.setVisibility(View.VISIBLE);
+            Button btn = (Button) findViewById(R.id.profileLocationButton);
+            btn.setVisibility(View.VISIBLE);
+
+            if(intent.getStringExtra("username") != null){
+                ProfilePicturetask profilePicturetask = new ProfilePicturetask();
+                profilePicturetask.execute(intent.getStringExtra("username"));
+            }
+
+        }else{
+            LinearLayout l = (LinearLayout) findViewById(R.id.profile_container);
+            l.setVisibility(View.INVISIBLE);
+            Button btn = (Button) findViewById(R.id.profileRetryButton);
+            btn.setVisibility(View.VISIBLE);
+            btn = (Button) findViewById(R.id.profileLocationButton);
+            btn.setVisibility(View.INVISIBLE);
+            toast = Toast.makeText(getApplicationContext(), "", Toast.LENGTH_SHORT);
+            toast.setText("Could not retrieve profile data. No internet connection.");
+            toast.show();
+        }
+    }
+
     @Override
     public void onResume()
     {
@@ -111,7 +128,7 @@ public class ProfileActivity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.profile, menu);
+        getMenuInflater().inflate(R.menu.settings, menu);
         return true;
     }
 
@@ -143,6 +160,7 @@ public class ProfileActivity extends AppCompatActivity
             intent = new Intent(ProfileActivity.this, ActivationActivity.class);
         } else if (id == R.id.nav_profile) {
             intent = new Intent(ProfileActivity.this, ProfileActivity.class);
+            intent.putExtra("username", SharedPreferencesService.getStringProperty(getApplicationContext(), "username"));
         } else if (id == R.id.nav_contacts) {
             intent = new Intent(ProfileActivity.this, ContactsActivity.class);
         } else if (id == R.id.nav_settings) {
@@ -159,9 +177,18 @@ public class ProfileActivity extends AppCompatActivity
         return true;
     }
 
+    public void retryProfile(View view) {
+        load();
+    }
+
     public void editProfile(View view) {
         Intent intent = new Intent(ProfileActivity.this, EditProfileActivity.class);
         startActivityForResult(intent, 1);
+    }
+
+    public void editProfileImage(View view) {
+        Intent intent = new Intent(ProfileActivity.this, EditProfileImageActivity.class);
+        startActivityForResult(intent, 2);
     }
 
     @Override
@@ -171,9 +198,38 @@ public class ProfileActivity extends AppCompatActivity
             if (resultCode == Activity.RESULT_OK) {
                 Bundle b = data.getExtras();
                 if (b != null) {
-                    String user = b.getString("username");
-                    ProfilePicturetask profilePicturetask = new ProfilePicturetask();
-                    profilePicturetask.execute(intent.getStringExtra("username"));
+                    if(BaseHelper.isInternetConnected(this)) {
+                        ProfileTask profileTask = new ProfileTask();
+                        profileTask.execute(intent.getStringExtra("username"));
+                    }else{
+                        Button btn = (Button) findViewById(R.id.profileEditButton);
+                        btn.setVisibility(View.VISIBLE);
+                        if(toast == null) {
+                            toast = Toast.makeText(getApplicationContext(), "", Toast.LENGTH_SHORT);
+                        }
+                        toast.setText("Could not update profile. No internet connection.");
+                        toast.show();
+                    }
+
+                }
+            } else {
+                System.out.println("RESULT CANCELLED");
+            }
+        }else if(requestCode == 2){
+            if (resultCode == Activity.RESULT_OK) {
+                Bundle b = data.getExtras();
+                if (b != null) {
+                    if(BaseHelper.isInternetConnected(this)) {
+                        ProfilePicturetask profilePicturetask = new ProfilePicturetask();
+                        profilePicturetask.execute(intent.getStringExtra("username"));
+                    }else{
+                        if(toast == null) {
+                            toast = Toast.makeText(getApplicationContext(), "", Toast.LENGTH_SHORT);
+                        }
+                        toast.setText("Could not update profile image. No internet connection.");
+                        toast.show();
+                    }
+
                 }
             } else if (resultCode == 0) {
                 System.out.println("RESULT CANCELLED");
@@ -202,8 +258,7 @@ public class ProfileActivity extends AppCompatActivity
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            SharedPreferences sharedPreferences = getSharedPreferences("prefs", MODE_PRIVATE);;
-            progress = ProgressDialog.show(ProfileActivity.this, "", "Retrieving profile image. Please wait...", true);
+            progress = ProgressDialog.show(ProfileActivity.this, "", "Retrieving profile...", true);
             progress.show();
         }
 
@@ -213,27 +268,30 @@ public class ProfileActivity extends AppCompatActivity
         }
 
         protected void onPostExecute(byte[] result) {
-            progress.dismiss();
             if(result.length > 0) {
 
                 try {
                    Bitmap bmp = BitmapFactory.decodeByteArray(result, 0, result.length);
-                    ImageView image = (ImageView) findViewById(R.id.profile_img);
-                    image.setImageBitmap(bmp);
+                    if(bmp != null){
+                        ImageView image = (ImageView) findViewById(R.id.profile_img);
+                        image.setImageBitmap(bmp);
+                    }
                 } catch(Exception e) {
                     Log.e("", e.getMessage());
                 }
 
-                ProfileTask profileTask = new ProfileTask();
-                profileTask.execute(SharedPreferencesService.getStringProperty(getApplicationContext(), "username"));
-
             }else{
+                ImageView image = (ImageView)findViewById(R.id.profile_img);
+                image.setBackgroundResource(R.drawable.icon_only_dark_crop);
                 if(toast == null) {
                     toast = Toast.makeText(getApplicationContext(), "", Toast.LENGTH_SHORT);
                 }
                 toast.setText("Could not retrieve profile information.");
                 toast.show();
             }
+
+            ProfileTask profileTask = new ProfileTask();
+            profileTask.execute(SharedPreferencesService.getStringProperty(getApplicationContext(), "username"));
 
         }
     }
@@ -259,9 +317,6 @@ public class ProfileActivity extends AppCompatActivity
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            SharedPreferences sharedPreferences = getSharedPreferences("prefs", MODE_PRIVATE);;
-            progress = ProgressDialog.show(ProfileActivity.this, "", "Updating profile. Please wait...", true);
-            progress.show();
         }
 
         @Override
@@ -322,6 +377,9 @@ public class ProfileActivity extends AppCompatActivity
                         t.setText(profile.getString("nextOfKinRelationship"));
                         t = (TextView)findViewById(R.id.profileNextOfKinContactNumber);
                         t.setText(profile.getString("nextOfKinContactNumber"));
+
+                        Button btn = (Button)findViewById(R.id.profileRetryButton);
+                        btn.setVisibility(View.INVISIBLE);
                     }
                 } catch(Exception e) {
                     Log.e("", e.getMessage());

@@ -27,6 +27,42 @@
         <item>What is the name of your first childhood friend?</item>
     </string-array>
 
+    <string-array name="edit_profile_blood_type">
+        <item>A+</item>
+        <item>A-</item>
+        <item>B+</item>
+        <item>B-</item>
+        <item>O+</item>
+        <item>O-</item>
+        <item>AB+</item>
+        <item>AB-</item>
+    </string-array>
+
+    <string-array name="relationship">
+        <item>Mother</item>
+        <item>Father</item>
+        <item>Brother</item>
+        <item>Sister</item>
+        <item>Aunt</item>
+        <item>Uncle</item>
+        <item>Boyfriend</item>
+        <item>Girlfriend</item>
+        <item>Husband</item>
+        <item>Wife</item>
+        <item>Neice</item>
+        <item>Nephew</item>
+        <item>Grandfather</item>
+        <item>Grandmother</item>
+        <item>Friend</item>
+        <item>Work Colleague</item>
+        <item>Other</item>
+    </string-array>
+
+    <string-array name="edit_profile_gender">
+        <item>Male</item>
+        <item>Female</item>
+    </string-array>
+
     <style name="white_text_small">
 
         <item name="android:textSize">10dp</item>

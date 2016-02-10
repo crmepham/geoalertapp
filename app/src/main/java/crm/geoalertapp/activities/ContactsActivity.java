@@ -18,6 +18,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,9 +32,13 @@ import javax.ws.rs.core.MultivaluedMap;
 import crm.geoalertapp.R;
 import crm.geoalertapp.crm.geoalertapp.utilities.RestClient;
 import crm.geoalertapp.crm.geoalertapp.utilities.SharedPreferencesService;
+import crm.geoalertapp.crm.geoalertapp.utilities.ValidationHelper;
 
 public class ContactsActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+
+    Toast toast;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +69,18 @@ public class ContactsActivity extends AppCompatActivity
         View headerLayout = navigationView.getHeaderView(0);
         TextView tv = (TextView) headerLayout.findViewById(R.id.nav_header_username);
         tv.setText(SharedPreferencesService.getStringProperty(getApplicationContext(), "username"));
+
+        load();
+    }
+
+    private void load(){
+        if(ValidationHelper.isInternetConnected(getApplicationContext())) {
+
+        }else{
+            toast = Toast.makeText(getApplicationContext(), "", Toast.LENGTH_SHORT);
+            toast.setText("Could not retrieve contacts. No internet connection.");
+            toast.show();
+        }
     }
 
     @Override

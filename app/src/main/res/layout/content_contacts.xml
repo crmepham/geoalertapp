@@ -1,18 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/loginBackground"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".activities.ContactsActivity">
+    tools:context="crm.geoalertapp.activities.ContactsActivity"
+    tools:showIn="@layout/app_bar_contacts">
 
     <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@android:color/black">
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="5dp">
+
+            <ImageView
+                android:layout_width="50dp"
+                android:layout_height="70dp"
+                android:src="@drawable/icon_only_dark_crop"
+                android:layout_marginRight="10dp"/>
+
+            <LinearLayout
+                android:layout_height="match_parent"
+                android:paddingTop="15dp"
+                android:orientation="vertical"
+                android:layout_width="fill_parent"
+                android:layout_weight="0.9">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Johnathon Doe"
+                    android:textColor="@android:color/white"
+                    android:textSize="15dp"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Active"
+                    android:textColor="@android:color/white"
+                    android:textSize="15dp"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_height="match_parent"
+                android:paddingTop="15dp"
+                android:paddingRight="10dp"
+                android:orientation="vertical"
+                android:layout_width="wrap_content"
+                android:layout_weight="0.1">
+
+                <Button
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:background="@android:drawable/ic_menu_delete"
+                    android:layout_marginLeft="10dp"
+                    android:layout_gravity="right"/>
+
+            </LinearLayout>
+        </LinearLayout>
 
     </LinearLayout>
-
-</RelativeLayout>
+</ScrollView>

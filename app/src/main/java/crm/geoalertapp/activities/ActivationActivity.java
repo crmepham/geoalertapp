@@ -80,6 +80,7 @@ public class ActivationActivity extends AppCompatActivity
             intent = new Intent(ActivationActivity.this, ActivationActivity.class);
         } else if (id == R.id.nav_profile) {
             intent = new Intent(ActivationActivity.this, ProfileActivity.class);
+            intent.putExtra("username", SharedPreferencesService.getStringProperty(getApplicationContext(), "username"));
         } else if (id == R.id.nav_contacts) {
             intent = new Intent(ActivationActivity.this, ContactsActivity.class);
         } else if (id == R.id.nav_settings) {

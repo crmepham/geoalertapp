@@ -20,4 +20,5 @@
     <string name="section_format">Hello World from section: %1$d</string>
     <string name="title_activity_edit_profile">Edit Profile</string>
     <string name="title_activity_date_picker">Pick Date</string>
+    <string name="title_activity_edit_profile_image">Edit Profile Image</string>
 </resources>

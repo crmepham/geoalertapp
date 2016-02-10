@@ -1,8 +1,12 @@
 package crm.geoalertapp.crm.geoalertapp.utilities;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
+import android.opengl.Matrix;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
 import android.util.Log;
@@ -12,6 +16,11 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.DatePicker;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -101,5 +110,42 @@ public class BaseHelper {
             }
         }
         return result;
+    }
+
+    public static Bitmap scaleImage(Context context, Uri uri) throws IOException {
+        Bitmap selectedBitmap = null;
+        try {
+
+            // BitmapFactory options to downsize the image
+            BitmapFactory.Options o = new BitmapFactory.Options();
+            o.inJustDecodeBounds = true;
+            o.inSampleSize = 6;
+            // factor of downsizing the image
+
+            InputStream inputStream = context.getContentResolver().openInputStream(uri);
+            //Bitmap selectedBitmap = null;
+            BitmapFactory.decodeStream(inputStream, null, o);
+            inputStream.close();
+
+            // The new size we want to scale to
+            final int REQUIRED_SIZE=30;
+
+            // Find the correct scale value. It should be the power of 2.
+            int scale = 1;
+            while(o.outWidth / scale / 2 >= REQUIRED_SIZE &&
+                    o.outHeight / scale / 2 >= REQUIRED_SIZE) {
+                scale *= 2;
+            }
+
+            BitmapFactory.Options o2 = new BitmapFactory.Options();
+            o2.inSampleSize = scale;
+            inputStream = context.getContentResolver().openInputStream(uri);
+
+            selectedBitmap = BitmapFactory.decodeStream(inputStream, null, o2);
+            inputStream.close();
+        } catch (Exception e) {
+            Log.e("", e.getMessage());
+        }
+        return selectedBitmap;
     }
 }

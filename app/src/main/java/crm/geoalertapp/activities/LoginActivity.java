@@ -37,7 +37,8 @@ public class LoginActivity extends AppCompatActivity {
         SharedPreferencesService.removeKey(getApplicationContext(), "loggedIn");
         // check loggedIn here
         if(loggedIn){
-            setContentView(R.layout.activity_contacts);
+            Intent intent = new Intent(LoginActivity.this, ContactsActivity.class);
+            startActivity(intent);
         }else{
             setContentView(R.layout.activity_login);
         }
@@ -56,6 +57,9 @@ public class LoginActivity extends AppCompatActivity {
 
     public void loginButton(View view) {
 
+        progress = ProgressDialog.show(LoginActivity.this, "", "Logging in. Please wait...", true);
+        progress.show();
+
         EditText tv = (EditText) findViewById(R.id.inputUsername);
         username = tv.getText().toString();
         tv = (EditText) findViewById(R.id.inputPassword);
@@ -63,6 +67,7 @@ public class LoginActivity extends AppCompatActivity {
 
         String[] validationErrors = ValidationHelper.validateLoginCredentials(username, password);
         if(validationErrors.length > 0){
+            progress.dismiss();
             String errors = "";
             for(String error : validationErrors){
                 errors += error + "\n";
@@ -74,6 +79,7 @@ public class LoginActivity extends AppCompatActivity {
             LoginTask loginTask = new LoginTask();
             loginTask.execute(username, encryptedPassword);
         }else{
+            progress.dismiss();
             toast = Toast.makeText(getApplicationContext(), "", Toast.LENGTH_LONG);
             toast.setText("No internet access.");
             toast.show();
@@ -104,9 +110,6 @@ public class LoginActivity extends AppCompatActivity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            SharedPreferences sharedPreferences = getSharedPreferences("prefs", MODE_PRIVATE);
-            progress = ProgressDialog.show(LoginActivity.this, "", "Logging in. Please wait...", true);
-            progress.show();
         }
 
         @Override

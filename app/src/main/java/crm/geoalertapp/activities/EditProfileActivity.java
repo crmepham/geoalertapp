@@ -14,8 +14,10 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -42,6 +44,7 @@ public class EditProfileActivity extends AppCompatActivity {
     Toast toast;
     String dob;
     ProgressDialog progress;
+    Spinner spinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,17 +54,16 @@ public class EditProfileActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
+        addSpinnerEntries();
+
         String profile = SharedPreferencesService.getStringProperty(getApplicationContext(), "profile");
         try{
             JSONObject obj = new JSONObject(profile);
             EditText t = (EditText) findViewById(R.id.editProfileFullName);
             t.setText(obj.getString("fullName"));
-            t = (EditText) findViewById(R.id.editProfileGender);
-            t.setText(obj.getString("gender"));
             Button btn = (Button) findViewById(R.id.pickDateButton);
-            btn.setText(BaseHelper.formatDateString("yyy-mm-dd hh:mm:ss", "d MMM, yyyy", obj.getString("dob")));
-            t = (EditText) findViewById(R.id.editProfileBloodType);
-            t.setText(obj.getString("bloodType"));
+            btn.setText( (obj.getString("dob").equals("") || obj.getString("dob").equals("1970-01-01 01:01:01"))? "Pick a date":
+            BaseHelper.formatDateString("yyy-mm-dd hh:mm:ss", "d MMM, yyyy", obj.getString("dob")));
             t = (EditText) findViewById(R.id.editProfileHeight);
             t.setText(obj.getString("height"));
             t = (EditText) findViewById(R.id.editProfileWeight);
@@ -74,8 +76,6 @@ public class EditProfileActivity extends AppCompatActivity {
             t.setText(obj.getString("clothingShoes"));
             t = (EditText) findViewById(R.id.editProfileNextOfKinFullName);
             t.setText(obj.getString("nextOfKinFullName"));
-            t = (EditText) findViewById(R.id.editProfileNextOfKinRelationship);
-            t.setText(obj.getString("nextOfKinRelationship"));
             t = (EditText) findViewById(R.id.editProfileNextOfKinContactNumber);
             t.setText(obj.getString("nextOfKinContactNumber"));
         }catch(JSONException e){
@@ -84,18 +84,29 @@ public class EditProfileActivity extends AppCompatActivity {
 
     }
 
+    private void addSpinnerEntries() {
+        spinner = (Spinner) findViewById(R.id.editProfileGender);
+        ArrayAdapter adapter = ArrayAdapter.createFromResource(this, R.array.edit_profile_gender, R.layout.spinner_item);
+        spinner.setAdapter(adapter);
+        spinner = (Spinner) findViewById(R.id.editProfileBloodType);
+        adapter = ArrayAdapter.createFromResource(this, R.array.edit_profile_blood_type, R.layout.spinner_item);
+        spinner.setAdapter(adapter);
+        spinner = (Spinner) findViewById(R.id.editProfileNextOfKinRelationship);
+        adapter = ArrayAdapter.createFromResource(this, R.array.relationship, R.layout.spinner_item);
+        spinner.setAdapter(adapter);
+    }
+
     public void updateProfile(View view) {
 
         List<String> info = new ArrayList<>();
-
         EditText t = (EditText) findViewById(R.id.editProfileFullName);
         info.add((t.getText().toString().equals(""))? " " : t.getText().toString());
-        t = (EditText) findViewById(R.id.editProfileGender);
-        info.add((t.getText().toString().equals(""))? " " : t.getText().toString());
+        spinner = (Spinner) findViewById(R.id.editProfileGender);
+        info.add((spinner.getSelectedItem().toString()));
         Button btn = (Button) findViewById(R.id.pickDateButton);
-        info.add((BaseHelper.formatDateString("d MMM, yyyy", "yyyy-mm-dd hh:mm:ss", btn.getText().toString()).equals("1234-56-78 00:00:00"))? "" : BaseHelper.formatDateString("d MMM, yyyy", "yyyy-mm-dd hh:mm:ss", btn.getText().toString()));
-        t = (EditText) findViewById(R.id.editProfileBloodType);
-        info.add((t.getText().toString().equals(""))? " " : t.getText().toString());
+        info.add((btn.getText().toString().equals("Pick a date"))? "1970-01-01 01:01:01":BaseHelper.formatDateString("d MMM, yyyy", "yyyy-MM-dd hh:mm:ss", btn.getText().toString()));
+        spinner = (Spinner) findViewById(R.id.editProfileBloodType);
+        info.add((spinner.getSelectedItem().toString()));
         t = (EditText) findViewById(R.id.editProfileHeight);
         info.add((t.getText().toString().equals(""))? " " : t.getText().toString());
         t = (EditText) findViewById(R.id.editProfileWeight);
@@ -108,19 +119,29 @@ public class EditProfileActivity extends AppCompatActivity {
         info.add((t.getText().toString().equals(""))? " " : t.getText().toString());
         t = (EditText) findViewById(R.id.editProfileNextOfKinFullName);
         info.add((t.getText().toString().equals(""))? " " : t.getText().toString());
-        t = (EditText) findViewById(R.id.editProfileNextOfKinRelationship);
-        info.add((t.getText().toString().equals(""))? " " : t.getText().toString());
+        spinner = (Spinner) findViewById(R.id.editProfileNextOfKinRelationship);
+        info.add((spinner.getSelectedItem().toString()));
         t = (EditText) findViewById(R.id.editProfileNextOfKinContactNumber);
         info.add((t.getText().toString().equals(""))? " " : t.getText().toString());
         String[] validationErrors = ValidationHelper.validateProfileInformation(info);
+
         if(validationErrors.length > 0) {
             String errors = "";
             for(String error : validationErrors){
                 errors += error + "\n";
             }
-            toast = Toast.makeText(getApplicationContext(), errors, Toast.LENGTH_LONG);
+            if(toast == null) {
+                toast = Toast.makeText(getApplicationContext(), "", Toast.LENGTH_SHORT);
+            }
+            toast.setText(errors);
             toast.show();
 
+        }else if(!BaseHelper.isInternetConnected(this)){
+            if(toast == null) {
+                toast = Toast.makeText(getApplicationContext(), "", Toast.LENGTH_SHORT);
+            }
+            toast.setText("Could not update profile at this time. No internet connection.");
+            toast.show();
         }else{
             UpdateProfileTask updateProfileTask = new UpdateProfileTask();
             String paramString = BaseHelper.createStringFromList(info);
@@ -182,7 +203,6 @@ public class EditProfileActivity extends AppCompatActivity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            SharedPreferences sharedPreferences = getSharedPreferences("prefs", MODE_PRIVATE);;
             progress = ProgressDialog.show(EditProfileActivity.this, "", "Updating profile. Please wait...", true);
             progress.show();
         }

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="crm.geoalertapp.activities.EditProfileImageActivity"
+    tools:showIn="@layout/activity_edit_profile_image">
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Select Image"
+        android:id="@+id/imageSelectButton"
+        android:background="@color/colorAccent"
+        android:onClick="selectImage"
+        android:layout_marginBottom="15dp"/>
+
+
+    <ImageView
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:id="@+id/profile_edit_img"
+        android:layout_gravity="center_horizontal"
+        android:src="@drawable/icon_only_dark_crop"
+        android:layout_marginBottom="15dp"
+        android:visibility="gone"/>
+
+    <TextView
+        android:id="@+id/profile_edit_img_error"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textAlignment="center"
+        android:text=" "
+        android:textColor="@android:color/white"
+        android:textSize="13dp"
+        android:visibility="gone"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Save Image"
+        android:id="@+id/updateProfileImageButton"
+        android:background="@android:color/holo_green_dark"
+        android:onClick="updateProfileImage"
+        android:visibility="gone"
+        android:layout_marginBottom="15dp"/>
+
+</LinearLayout>

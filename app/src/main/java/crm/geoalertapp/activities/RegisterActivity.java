@@ -53,6 +53,7 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     public void registerAccount(View view) {
+
         EditText tv = (EditText) findViewById(R.id.registerUsername);
         String username = tv.getText().toString();
         tv = (EditText) findViewById(R.id.registerPassword);
@@ -78,6 +79,9 @@ public class RegisterActivity extends AppCompatActivity {
             toast = Toast.makeText(getApplicationContext(), errors, Toast.LENGTH_LONG);
             toast.show();
         }else{
+            progress = ProgressDialog.show(RegisterActivity.this, "",
+                    "Registering. Please wait...", true);
+            progress.show();
             String contactNumber = BaseHelper.getContactNumber(getApplicationContext());
             String lang = BaseHelper.getLanguage();
             String encryptedSecurityAnswer = StringEncrypter.encrypt(securityAnswer);
@@ -118,9 +122,6 @@ public class RegisterActivity extends AppCompatActivity {
             if(toast == null) {
                 toast = Toast.makeText(getApplicationContext(), "", Toast.LENGTH_SHORT);
             }
-            progress = ProgressDialog.show(RegisterActivity.this, "",
-                    "Registering. Please wait...", true);
-            progress.show();
         }
 
         @Override
@@ -131,8 +132,12 @@ public class RegisterActivity extends AppCompatActivity {
         protected void onPostExecute(Integer result) {
             progress.dismiss();
             if(result == 201) {
+                EditText tv = (EditText) findViewById(R.id.registerUsername);
+                String username = tv.getText().toString();
+                SharedPreferencesService.setStringProperty(getApplicationContext(), "username", username);
                 SharedPreferencesService.setBooleanProperty(getApplicationContext(), "loggedIn", true);
-                Intent intent = new Intent(RegisterActivity.this, ContactsActivity.class);
+                Intent intent = new Intent(RegisterActivity.this, ProfileActivity.class);
+                intent.putExtra("username", username);
                 startActivity(intent);
             }else{
                 toast.setText("Unable to register, that user already exists.");

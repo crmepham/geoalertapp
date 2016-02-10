@@ -52,15 +52,18 @@
             android:layout_marginBottom="5dp"
             />
 
-        <EditText
+
+        <Spinner
+            android:id="@+id/editProfileGender"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/editProfileGender"
-            android:textColor="@android:color/white"
-            android:background="@drawable/orangeborder"
-            android:padding="10dp"
-            android:textSize="13dp"
-            android:layout_marginBottom="15dp"/>
+            android:prompt="@string/app_name"
+            android:gravity="center"
+            android:entries="@array/edit_profile_gender"
+            android:ems="10"
+            android:layout_marginBottom="20dp"
+            android:background="@color/colorAccent"
+            android:layout_gravity="center_horizontal"/>
 
         <TextView
             android:layout_width="match_parent"
@@ -97,15 +100,17 @@
             android:layout_marginTop="10dp"
             />
 
-        <EditText
+        <Spinner
+            android:id="@+id/editProfileBloodType"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/editProfileBloodType"
-            android:textColor="@android:color/white"
-            android:background="@drawable/orangeborder"
-            android:padding="10dp"
-            android:textSize="13dp"
-            android:layout_marginBottom="15dp"/>
+            android:prompt="@string/app_name"
+            android:gravity="center"
+            android:entries="@array/edit_profile_blood_type"
+            android:ems="10"
+            android:layout_marginBottom="20dp"
+            android:background="@color/colorAccent"
+            android:layout_gravity="center_horizontal"/>
 
         <TextView
             android:layout_width="match_parent"
@@ -258,15 +263,17 @@
             android:layout_marginTop="10dp"
             />
 
-        <EditText
+        <Spinner
+            android:id="@+id/editProfileNextOfKinRelationship"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/editProfileNextOfKinRelationship"
-            android:textColor="@android:color/white"
-            android:background="@drawable/orangeborder"
-            android:padding="10dp"
-            android:textSize="13dp"
-            android:layout_marginBottom="15dp"/>
+            android:prompt="@string/app_name"
+            android:gravity="center"
+            android:entries="@array/relationship"
+            android:ems="10"
+            android:layout_marginBottom="20dp"
+            android:background="@color/colorAccent"
+            android:layout_gravity="center_horizontal"/>
 
         <TextView
             android:layout_width="match_parent"
@@ -296,7 +303,7 @@
             android:layout_height="wrap_content"
             android:text="Update Profile"
             android:id="@+id/editProfileUpdateButton"
-            android:background="@color/colorAccent"
+            android:background="@android:color/holo_green_dark"
             android:onClick="updateProfile"
             android:layout_marginBottom="15dp"/>
 
