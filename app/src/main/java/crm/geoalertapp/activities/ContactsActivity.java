@@ -60,6 +60,7 @@ public class ContactsActivity extends AppCompatActivity
 
     ProgressDialog progress;
     Toast toast;
+    Button retryButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,15 +97,58 @@ public class ContactsActivity extends AppCompatActivity
 
     private void load(){
         if(ValidationHelper.isInternetConnected(getApplicationContext())) {
+            LinearLayout l = (LinearLayout) findViewById(R.id.contacts_container);
+            if(retryButton != null) {
+                l.removeView(findViewById(R.id.contactRetry));
+            }
             progress = ProgressDialog.show(ContactsActivity.this, "", "Retrieving contacts...", true);
             progress.show();
             ContactsTask contactsTask = new ContactsTask();
             contactsTask.execute(SharedPreferencesService.getStringProperty(getApplicationContext(), "username"));
         }else{
-            toast = Toast.makeText(getApplicationContext(), "", Toast.LENGTH_SHORT);
-            toast.setText("Could not retrieve contacts. No internet connection.");
-            toast.show();
+            LinearLayout l = (LinearLayout) findViewById(R.id.contacts_container);
+            if(retryButton != null){
+                l.addView(retryButton);
+            }else {
+                toast = Toast.makeText(getApplicationContext(), "", Toast.LENGTH_SHORT);
+                toast.setText("Could not retrieve contacts. No internet connection.");
+                toast.show();
+
+                retryButton = new Button(getApplicationContext());
+                int size = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 30, getResources().getDisplayMetrics());
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                params.gravity = Gravity.CENTER_HORIZONTAL;
+                retryButton.setLayoutParams(params);
+                retryButton.setId(R.id.contactRetry);
+                retryButton.setText("Retry");
+                retryButton.setBackgroundColor(Color.RED);
+                retryButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (ValidationHelper.isInternetConnected(getApplicationContext())) {
+                            LinearLayout l = (LinearLayout) findViewById(R.id.contacts_container);
+                            l.removeView(findViewById(R.id.contactRetry));
+                            progress = ProgressDialog.show(ContactsActivity.this, "", "Retrieving contacts...", true);
+                            progress.show();
+                            ContactsTask contactsTask = new ContactsTask();
+                            contactsTask.execute(SharedPreferencesService.getStringProperty(getApplicationContext(), "username"));
+                        }else{
+                            toast = Toast.makeText(getApplicationContext(), "", Toast.LENGTH_SHORT);
+                            toast.setText("Could not retrieve contacts. No internet connection.");
+                            toast.show();
+                        }
+                    }
+                });
+                l.addView(retryButton);
+            }
+
+
+
         }
+    }
+
+    public void retryContacts(View view) {
+        load();
     }
 
     @Override
@@ -307,7 +351,7 @@ public class ContactsActivity extends AppCompatActivity
 
                         // add delete button to delete wrapper
                         Button deleteButton = new Button(getApplicationContext());
-                        int size = (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 40, getResources().getDisplayMetrics());
+                        int size = (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 30, getResources().getDisplayMetrics());
                         params = new LinearLayout.LayoutParams(size, size);
                         params.setMargins((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, getResources().getDisplayMetrics()), 0, 0, 0);
                         params.gravity= Gravity.RIGHT;

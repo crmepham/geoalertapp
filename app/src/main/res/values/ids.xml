@@ -2,4 +2,5 @@
 <resources>
     <item name="contactDelete" type="id"/>
     <item name="contactUsername" type="id"/>
+    <item name="contactRetry" type="id"/>
 </resources>
