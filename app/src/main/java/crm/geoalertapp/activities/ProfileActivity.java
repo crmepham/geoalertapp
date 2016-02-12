@@ -190,8 +190,16 @@ public class ProfileActivity extends AppCompatActivity
     }
 
     public void editProfileImage(View view) {
-        Intent intent = new Intent(ProfileActivity.this, EditProfileImageActivity.class);
-        startActivityForResult(intent, 2);
+        if(username.equals(SharedPreferencesService.getStringProperty(getApplicationContext(), "username"))) {
+            Intent intent = new Intent(ProfileActivity.this, EditProfileImageActivity.class);
+            startActivityForResult(intent, 2);
+        }else{
+            if(toast == null) {
+                toast = Toast.makeText(getApplicationContext(), "", Toast.LENGTH_SHORT);
+            }
+            toast.setText("You cannot edit this user's profile image.");
+            toast.show();
+        }
     }
 
     @Override
