@@ -54,6 +54,7 @@ public class ProfileActivity extends AppCompatActivity
     ProgressDialog progress;
     Toast toast;
     Intent intent;
+    String username;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,9 +92,11 @@ public class ProfileActivity extends AppCompatActivity
             Button btn = (Button) findViewById(R.id.profileLocationButton);
             btn.setVisibility(View.VISIBLE);
 
-            if(intent.getStringExtra("username") != null){
+            username = intent.getStringExtra("username");
+
+            if(username != null){
                 ProfilePicturetask profilePicturetask = new ProfilePicturetask();
-                profilePicturetask.execute(intent.getStringExtra("username"));
+                profilePicturetask.execute(username);
             }
 
         }else{
@@ -291,7 +294,7 @@ public class ProfileActivity extends AppCompatActivity
             }
 
             ProfileTask profileTask = new ProfileTask();
-            profileTask.execute(SharedPreferencesService.getStringProperty(getApplicationContext(), "username"));
+            profileTask.execute(username);
 
         }
     }
