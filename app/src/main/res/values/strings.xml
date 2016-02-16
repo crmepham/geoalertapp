@@ -21,4 +21,6 @@
     <string name="title_activity_edit_profile">Edit Profile</string>
     <string name="title_activity_date_picker">Pick Date</string>
     <string name="title_activity_edit_profile_image">Edit Profile Image</string>
+    <string name="title_activity_pending_contact_requests">Pending Contact Requests</string>
+    <string name="title_activity_add_contact">Add Contact</string>
 </resources>

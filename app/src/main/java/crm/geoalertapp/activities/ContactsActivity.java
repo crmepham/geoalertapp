@@ -4,6 +4,8 @@ import android.app.ActionBar;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -55,12 +57,13 @@ import crm.geoalertapp.crm.geoalertapp.utilities.SharedPreferencesService;
 import crm.geoalertapp.crm.geoalertapp.utilities.ValidationHelper;
 
 public class ContactsActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
+        implements NavigationView.OnNavigationItemSelectedListener{
 
 
     ProgressDialog progress;
     Toast toast;
     Button retryButton;
+    JSONArray contactRequests;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,8 +76,8 @@ public class ContactsActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Intent intent = new Intent(ContactsActivity.this, AddContactActivity.class);
+                startActivity(intent);
             }
         });
 
@@ -103,6 +106,10 @@ public class ContactsActivity extends AppCompatActivity
             }
             progress = ProgressDialog.show(ContactsActivity.this, "", "Retrieving contacts...", true);
             progress.show();
+
+            PendingRequestsTask pendingRequestsTask = new PendingRequestsTask();
+            pendingRequestsTask.execute(SharedPreferencesService.getStringProperty(getApplicationContext(), "username"));
+
             ContactsTask contactsTask = new ContactsTask();
             contactsTask.execute(SharedPreferencesService.getStringProperty(getApplicationContext(), "username"));
         }else{
@@ -147,6 +154,13 @@ public class ContactsActivity extends AppCompatActivity
         }
     }
 
+    public void pendingRequestsButton(View view) {
+        Intent intent = new Intent(ContactsActivity.this, PendingContactRequestsActivity.class);
+        intent.putExtra("contactRequests", contactRequests.toString());
+        startActivity(intent);
+    }
+
+    // add button after 1 minute of being on this view???
     public void retryContacts(View view) {
         load();
     }
@@ -213,14 +227,6 @@ public class ContactsActivity extends AppCompatActivity
         return true;
     }
 
-    @Override
-    public void onClick(View v) {
-        if(v.getId() == R.id.contactDelete){
-            // delete this contact!?!?
-        }else{
-            // view this users profile
-        }
-    }
 
     private class ContactsTask extends AsyncTask<String, Integer, String> {
 
@@ -258,13 +264,13 @@ public class ContactsActivity extends AppCompatActivity
                     LinearLayout l = (LinearLayout) findViewById(R.id.contacts_container);
                     for (int i = 0; i < array.length(); i++) {
                         JSONObject object = array.getJSONObject(i);
-                        String fullName = object.getString("fullName");
-                        String username = object.getString("username");
-                        String status = object.getString("status");
-                        int userId = object.getInt("userId");
+                        final String username = object.getString("username");
+                        final String fullName = (object.isNull("fullName")) ? username : object.getString("fullName");
+                        final String status = object.getString("status");
+                        final int contactId = object.getInt("userId");
 
                         // create wrapper
-                        LinearLayout wrapper = new LinearLayout(getApplicationContext());
+                        final LinearLayout wrapper = new LinearLayout(getApplicationContext());
                         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
                         wrapper.setOrientation(LinearLayout.HORIZONTAL);
                         int padding = (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 5, getResources().getDisplayMetrics());
@@ -278,16 +284,18 @@ public class ContactsActivity extends AppCompatActivity
                         lp = new LinearLayout.LayoutParams((int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 50, getResources().getDisplayMetrics()), (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 50, getResources().getDisplayMetrics()));
                         lp.setMargins(0, 0, (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, getResources().getDisplayMetrics()), 0);
                         image.setLayoutParams(lp);
-                        image.setId(userId);
                         wrapper.addView(image);
+
+                        // get this users profile image
+                        ProfilePicturetask ProfilePicturetask = new ProfilePicturetask(image);
+                        ProfilePicturetask.execute(username);
 
                         // add linearLayout text wrapper to main wrapper
                         LinearLayout textWrapper = new LinearLayout(getApplicationContext());
                         textWrapper.setOrientation(LinearLayout.VERTICAL);
-                        textWrapper.setPadding(0, 0, 0, 0);
+                        textWrapper.setPadding(0, (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 5, getResources().getDisplayMetrics()), 0, 0);
                         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                         textWrapper.setLayoutParams(params);
-                        textWrapper.setId(userId);
                         textWrapper.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
@@ -295,18 +303,18 @@ public class ContactsActivity extends AppCompatActivity
                                 // when this linearlayout is clicked
                                 // get the username of this childs textview with an id of R.id.contactUsername
                                 // start new intent and pass the username
-                                String name = null;
+                                /*String name = null;
                                 for (int i = 0; i < ((ViewGroup) v).getChildCount(); ++i) {
                                     View nextChild = ((ViewGroup) v).getChildAt(i);
                                     if (nextChild.getId() == R.id.contactUsername) {
                                         TextView text = (TextView) nextChild;
                                         name = text.getText().toString();
                                     }
-                                }
+                                }*/
 
                                 //TextView tv_id = (TextView) ((View) v.getParent()).findViewById(R.id.contact);
                                 Intent intent = new Intent(ContactsActivity.this, ProfileActivity.class);
-                                intent.putExtra("username", name);
+                                intent.putExtra("username", username);
                                 startActivity(intent);
                             }
                         });
@@ -316,7 +324,6 @@ public class ContactsActivity extends AppCompatActivity
                         TextView fullNameText = new TextView(getApplicationContext());
                         lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                         fullNameText.setLayoutParams(lp);
-                        fullNameText.setId(i);
                         fullNameText.setText(fullName);
                         fullNameText.setTextColor(Color.parseColor("#FFFFFF"));
                         fullNameText.setTextSize(0, (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 15, getResources().getDisplayMetrics()));
@@ -326,9 +333,18 @@ public class ContactsActivity extends AppCompatActivity
                         TextView statusText = new TextView(getApplicationContext());
                         lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                         statusText.setLayoutParams(lp);
-                        statusText.setId(i);
                         statusText.setText(status);
-                        statusText.setTextColor(Color.parseColor("#FFFFFF"));
+                        switch(status) {
+                            case "Inactive":
+                                statusText.setTextColor(Color.GRAY);
+                                break;
+                            case "Active":
+                                statusText.setTextColor(Color.GREEN);
+                                break;
+                            case "Alert":
+                                statusText.setTextColor(Color.RED);
+                                break;
+                        }
                         statusText.setTextSize(0, (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 15, getResources().getDisplayMetrics()));
                         textWrapper.addView(statusText);
 
@@ -342,7 +358,7 @@ public class ContactsActivity extends AppCompatActivity
                         // add linearLayout delete image wrapper to main wrapper
                         LinearLayout deleteWrapper = new LinearLayout(getApplicationContext());
                         deleteWrapper.setOrientation(LinearLayout.VERTICAL);
-                        int paddingTop = (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 5, getResources().getDisplayMetrics());
+                        int paddingTop = (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 15, getResources().getDisplayMetrics());
                         int paddingRight = (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, getResources().getDisplayMetrics());
                         deleteWrapper.setPadding(0, paddingTop, paddingRight, 0);
                         params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -350,13 +366,23 @@ public class ContactsActivity extends AppCompatActivity
                         wrapper.addView(deleteWrapper);
 
                         // add delete button to delete wrapper
-                        Button deleteButton = new Button(getApplicationContext());
+                        final Button deleteButton = new Button(getApplicationContext());
                         int size = (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 30, getResources().getDisplayMetrics());
                         params = new LinearLayout.LayoutParams(size, size);
                         params.setMargins((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, getResources().getDisplayMetrics()), 0, 0, 0);
                         params.gravity= Gravity.RIGHT;
                         deleteButton.setLayoutParams(params);
                         deleteButton.setBackgroundResource(R.drawable.ic_delete_forever_white_24dp);
+                        deleteButton.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+
+
+                                // delete this contact
+                                DeleteContactTask DeleteContactTask = new DeleteContactTask(wrapper);
+                                DeleteContactTask.execute(contactId);
+                            }
+                        });
                         deleteWrapper.addView(deleteButton);
 
                     }
@@ -369,6 +395,169 @@ public class ContactsActivity extends AppCompatActivity
                     toast = Toast.makeText(getApplicationContext(), "", Toast.LENGTH_SHORT);
                 }
                 toast.setText("Could not retrieve contacts.");
+                toast.show();
+            }
+
+        }
+    }
+
+    private class PendingRequestsTask extends AsyncTask<String, Integer, String> {
+
+        protected String doInBackground(String... params) {
+
+            String jsonString = null;
+            String username = params[0];
+            try {
+                MultivaluedMap map = new MultivaluedMapImpl();
+                map.add("username", username);
+
+                RestClient tc = new RestClient(map);
+                jsonString = tc.postForString("user/retrieve/pending/contact/requests");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return jsonString;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected void onProgressUpdate(Integer... progress) {
+            super.onProgressUpdate(progress);
+        }
+
+        protected void onPostExecute(String result) {
+            progress.dismiss();
+            if(result != null) {
+                try {
+                    contactRequests = new JSONArray(result);
+                    LinearLayout l = (LinearLayout) findViewById(R.id.contacts_container);
+
+                    if(contactRequests.length() > 0){
+                        Button button = (Button) findViewById(R.id.pendingContactsButton);
+                        button.setText((contactRequests.length()> 1)? contactRequests.length() + " pending contact requests": contactRequests.length() + " pending contact request");
+                        button.setVisibility(View.VISIBLE);
+                    }
+
+                }catch(JSONException e){
+                    Log.e("", e.getMessage());
+                }
+
+            }else{
+                if(toast == null) {
+                    toast = Toast.makeText(getApplicationContext(), "", Toast.LENGTH_SHORT);
+                }
+                toast.setText("Could not retrieve contacts.");
+                toast.show();
+            }
+
+        }
+    }
+
+
+    private class ProfilePicturetask extends AsyncTask<String, Integer, byte[]> {
+        ImageView image;
+        public ProfilePicturetask(ImageView image) {
+            this.image = image;
+        }
+
+        protected byte[] doInBackground(String... params) {
+
+            byte[] image = null;
+            String username = params[0];
+            try {
+                MultivaluedMap map = new MultivaluedMapImpl();
+                map.add("username", username);
+
+                RestClient tc = new RestClient(map);
+                image = tc.postForImage("user/retrieve/profile/image");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return image;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected void onProgressUpdate(Integer... progress) {
+            super.onProgressUpdate(progress);
+        }
+
+        protected void onPostExecute(byte[] result) {
+            if(result.length > 0) {
+
+                try {
+                    Bitmap bmp = BitmapFactory.decodeByteArray(result, 0, result.length);
+                    if(bmp != null){
+                        image.setBackground(null);
+                        image.setImageBitmap(bmp);
+                    }
+                } catch(Exception e) {
+                    Log.e("", e.getMessage());
+                }
+
+            }else{
+                ImageView image = (ImageView)findViewById(R.id.profile_img);
+                image.setBackgroundResource(R.drawable.icon_only_dark_crop);
+            }
+
+        }
+    }
+
+    private class DeleteContactTask extends AsyncTask<Integer, Integer, Integer>{
+
+        LinearLayout wrapper;
+        public DeleteContactTask(LinearLayout wrapper) {
+            this.wrapper = wrapper;
+        }
+
+        protected Integer doInBackground(Integer... params) {
+
+            Integer responseCode = 0;
+            try {
+                MultivaluedMap map = new MultivaluedMapImpl();
+                map.add("username", SharedPreferencesService.getStringProperty(getApplicationContext(), "username"));
+                map.add("contactId", params[0].toString());
+
+                RestClient tc = new RestClient(map);
+                responseCode = tc.postForResponseCode("user/delete/contact");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return responseCode;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected void onProgressUpdate(Integer... progress) {
+            super.onProgressUpdate(progress);
+        }
+
+        protected void onPostExecute(Integer result) {
+            if(result == 201) {
+                wrapper.setVisibility(View.GONE);
+            }else if(result == 401){
+                if(toast == null) {
+                    toast = Toast.makeText(getApplicationContext(), "", Toast.LENGTH_SHORT);
+                }
+                toast.setText("Could not delete user.");
+                toast.show();
+            }else{
+                if(toast == null) {
+                    toast = Toast.makeText(getApplicationContext(), "", Toast.LENGTH_SHORT);
+                }
+                toast.setText("There was an error trying to delete user, please try again later.");
                 toast.show();
             }
 

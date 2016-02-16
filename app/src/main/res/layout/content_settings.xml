@@ -1,11 +1,140 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:background="@color/loginBackground"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="crm.geoalertapp.activities.SettingsActivity"
     tools:showIn="@layout/app_bar_settings">
 
-</RelativeLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="20dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="Shake sensitivity "
+                android:textColor="@android:color/white"
+                android:textSize="13dp"/>
+
+            <SeekBar
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/settingsSeekBar"
+                android:layout_weight="0.75"
+                android:progress="1"
+                android:secondaryProgress="1"
+                android:max="20"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:id="@+id/settingsSeekBarValue"
+                android:text="0"
+                android:textColor="@android:color/white"
+                android:textSize="13dp"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <Button
+                style="?android:attr/buttonStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:paddingRight="15dp"
+                android:paddingLeft="15dp"
+                android:text="Test"
+                android:textColor="@android:color/white"
+                android:background="@android:color/background_dark"
+                android:id="@+id/settingsTestSensitivityButton"
+                android:onClick="testSensitivity"/>
+
+            <View
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp"
+                android:layout_height="1dp"
+                android:layout_width="fill_parent"
+                android:background="#605a5a" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:paddingTop="15dp"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="Profile location map"
+                android:textColor="@android:color/white"
+                android:textSize="13dp"
+                android:layout_weight="0.75"/>
+
+            <Button
+                style="?android:attr/buttonStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:text="Enabled"
+                android:textColor="@android:color/white"
+                android:background="@android:color/background_dark"
+                android:id="@+id/settingsProfileLocationButton"
+                android:onClick="settingsProfileLocation"
+                android:layout_weight="0.25"/>
+
+        </LinearLayout>
+
+        <View
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
+            android:layout_height="1dp"
+            android:layout_width="fill_parent"
+            android:background="#605a5a" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <Button
+                style="?android:attr/buttonStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:paddingRight="15dp"
+                android:paddingLeft="15dp"
+                android:text="Save settings"
+                android:textColor="@android:color/white"
+                android:background="@android:color/background_dark"
+                android:id="@+id/settingsSaveButton"
+                android:onClick="saveSettings"/>
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+</ScrollView>
