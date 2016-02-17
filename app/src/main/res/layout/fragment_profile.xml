@@ -16,8 +16,7 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:paddingRight="20dp"
-        android:paddingTop="20dp"
-        android:id="@+id/linearLayout3">
+        android:paddingTop="20dp">
 
         <Button
             style="?android:attr/buttonStyleSmall"
@@ -36,7 +35,6 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/linearLayout3"
         android:layout_centerHorizontal="true">
 
         <ImageView

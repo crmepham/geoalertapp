@@ -37,7 +37,6 @@ public class LoginActivity extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         super.onCreate(savedInstanceState);
         boolean loggedIn = SharedPreferencesService.getBooleanProperty(getApplicationContext(), "loggedIn");
-        SharedPreferencesService.removeKey(getApplicationContext(), "loggedIn");
         // check loggedIn here
         if(loggedIn){
             Intent intent = new Intent(LoginActivity.this, ContactsActivity.class);

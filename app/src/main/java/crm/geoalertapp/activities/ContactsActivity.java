@@ -216,7 +216,8 @@ public class ContactsActivity extends AppCompatActivity
         } else if (id == R.id.nav_settings) {
             intent = new Intent(ContactsActivity.this, SettingsActivity.class);
         } else if (id == R.id.nav_logout) {
-            SharedPreferencesService.clearAllProperties(getApplicationContext());
+            SharedPreferencesService.removeKey(getApplicationContext(), "username");
+            SharedPreferencesService.removeKey(getApplicationContext(), "loggedIn");
             intent = new Intent(ContactsActivity.this, LoginActivity.class);
             startActivity(intent);
         }

@@ -28,6 +28,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -173,7 +174,8 @@ public class ProfileActivity extends AppCompatActivity
         } else if (id == R.id.nav_settings) {
             intent = new Intent(ProfileActivity.this, SettingsActivity.class);
         } else if (id == R.id.nav_logout) {
-            SharedPreferencesService.clearAllProperties(getApplicationContext());
+            SharedPreferencesService.removeKey(getApplicationContext(), "username");
+            SharedPreferencesService.removeKey(getApplicationContext(), "loggedIn");
             intent = new Intent(ProfileActivity.this, LoginActivity.class);
             startActivity(intent);
         }
@@ -219,7 +221,7 @@ public class ProfileActivity extends AppCompatActivity
                 Bundle b = data.getExtras();
                 if (b != null) {
                     if(BaseHelper.isInternetConnected(this)) {
-                        ProfileTask profileTask = new ProfileTask();
+                        ProfileTask profileTask = new ProfileTask((RelativeLayout)findViewById(R.id.profileTopButtonsWrapper));
                         profileTask.execute(intent.getStringExtra("username"));
                     }else{
                         Button btn = (Button) findViewById(R.id.profileEditButton);
@@ -310,13 +312,19 @@ public class ProfileActivity extends AppCompatActivity
                 toast.show();
             }
 
-            ProfileTask profileTask = new ProfileTask();
+            ProfileTask profileTask = new ProfileTask((RelativeLayout)findViewById(R.id.profileTopButtonsWrapper));
             profileTask.execute(username);
 
         }
     }
 
     private class ProfileTask extends AsyncTask<String, Integer, String> {
+
+        private RelativeLayout l;
+
+        public ProfileTask(RelativeLayout l){
+            this.l = l;
+        }
 
         protected String doInBackground(String... params) {
 
@@ -358,6 +366,17 @@ public class ProfileActivity extends AppCompatActivity
                             b.setVisibility(View.VISIBLE);
                             b = (Button) findViewById(R.id.profileLocationButton);
                             BaseHelper.setMargins(b, 0, 0, 310, 0);
+                        }
+
+                        int count = l.getChildCount();
+                        int visibleCount = 0;
+                        for(int i = 0; i < count; i++){
+                           if(l.getChildAt(i).getVisibility() == View.VISIBLE) {
+                               visibleCount++;
+                           }
+                        }
+                        if(visibleCount == 0){
+                            l.setVisibility(View.GONE);
                         }
 
                         TextView t = (TextView)findViewById(R.id.profile_status);

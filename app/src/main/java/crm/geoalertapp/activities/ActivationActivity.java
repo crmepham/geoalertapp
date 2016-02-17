@@ -10,6 +10,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 
 import crm.geoalertapp.R;
 import crm.geoalertapp.crm.geoalertapp.utilities.SharedPreferencesService;
@@ -32,6 +34,9 @@ public class ActivationActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        View headerLayout = navigationView.getHeaderView(0);
+        TextView tv = (TextView) headerLayout.findViewById(R.id.nav_header_username);
+        tv.setText(SharedPreferencesService.getStringProperty(getApplicationContext(), "username"));
     }
 
     @Override
@@ -86,7 +91,8 @@ public class ActivationActivity extends AppCompatActivity
         } else if (id == R.id.nav_settings) {
             intent = new Intent(ActivationActivity.this, SettingsActivity.class);
         } else if (id == R.id.nav_logout) {
-            SharedPreferencesService.clearAllProperties(getApplicationContext());
+            SharedPreferencesService.removeKey(getApplicationContext(), "username");
+            SharedPreferencesService.removeKey(getApplicationContext(), "loggedIn");
             intent = new Intent(ActivationActivity.this, LoginActivity.class);
             startActivity(intent);
         }

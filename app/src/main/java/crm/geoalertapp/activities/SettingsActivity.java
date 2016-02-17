@@ -88,6 +88,9 @@ public class SettingsActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        View headerLayout = navigationView.getHeaderView(0);
+        TextView tv = (TextView) headerLayout.findViewById(R.id.nav_header_username);
+        tv.setText(SharedPreferencesService.getStringProperty(getApplicationContext(), "username"));
 
         mAccel = 0.00f;
         mAccelCurrent = SensorManager.GRAVITY_EARTH;
@@ -221,7 +224,8 @@ public class SettingsActivity extends AppCompatActivity
             intent = new Intent(SettingsActivity.this, SettingsActivity.class);
         } else if (id == R.id.nav_logout) {
             LocationUpdateReceiver.CancelAlarm(this);
-            SharedPreferencesService.clearAllProperties(getApplicationContext());
+            SharedPreferencesService.removeKey(getApplicationContext(), "username");
+            SharedPreferencesService.removeKey(getApplicationContext(), "loggedIn");
             intent = new Intent(SettingsActivity.this, LoginActivity.class);
             startActivity(intent);
         }
