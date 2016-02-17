@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -17,6 +18,8 @@ import com.sun.jersey.core.util.MultivaluedMapImpl;
 import javax.ws.rs.core.MultivaluedMap;
 
 import crm.geoalertapp.R;
+import crm.geoalertapp.crm.geoalertapp.utilities.BaseHelper;
+import crm.geoalertapp.crm.geoalertapp.utilities.LocationUpdateReceiver;
 import crm.geoalertapp.crm.geoalertapp.utilities.RestClient;
 import crm.geoalertapp.crm.geoalertapp.utilities.SharedPreferencesService;
 import crm.geoalertapp.crm.geoalertapp.utilities.StringEncrypter;
@@ -122,6 +125,10 @@ public class LoginActivity extends AppCompatActivity {
             if(result == 200) {
                 SharedPreferencesService.setBooleanProperty(getApplicationContext(), "loggedIn", true);
                 SharedPreferencesService.setStringProperty(getApplication(), "username", username);
+                if(SharedPreferencesService.getStringProperty(getApplicationContext(), "displayProfileMap").equals("Enabled")) {
+                    LocationUpdateReceiver.SetAlarm(getApplicationContext(), BaseHelper.INTERVAL_THIRTY_MINUTES); // 30 mins approx.
+                }
+
                 Intent intent = new Intent(LoginActivity.this, ContactsActivity.class);
                 startActivity(intent);
             }else if(result == 401){

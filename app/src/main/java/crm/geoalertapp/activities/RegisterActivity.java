@@ -20,6 +20,7 @@ import javax.ws.rs.core.MultivaluedMap;
 
 import crm.geoalertapp.R;
 import crm.geoalertapp.crm.geoalertapp.utilities.BaseHelper;
+import crm.geoalertapp.crm.geoalertapp.utilities.LocationUpdateReceiver;
 import crm.geoalertapp.crm.geoalertapp.utilities.RestClient;
 import crm.geoalertapp.crm.geoalertapp.utilities.SharedPreferencesService;
 import crm.geoalertapp.crm.geoalertapp.utilities.StringEncrypter;
@@ -136,6 +137,16 @@ public class RegisterActivity extends AppCompatActivity {
                 String username = tv.getText().toString();
                 SharedPreferencesService.setStringProperty(getApplicationContext(), "username", username);
                 SharedPreferencesService.setBooleanProperty(getApplicationContext(), "loggedIn", true);
+
+                if(SharedPreferencesService.getStringProperty(getApplicationContext(), "sensitivity") == null) {
+                    SharedPreferencesService.setStringProperty(getApplicationContext(), "sensitivity", "15");
+                }
+
+                if(SharedPreferencesService.getStringProperty(getApplicationContext(), "displayProfileMap") == null) {
+                    SharedPreferencesService.setStringProperty(getApplicationContext(), "displayProfileMap", "Enabled");
+                    LocationUpdateReceiver.SetAlarm(getApplicationContext(), BaseHelper.INTERVAL_THIRTY_MINUTES); // 30 mins approx.
+                }
+
                 Intent intent = new Intent(RegisterActivity.this, ProfileActivity.class);
                 intent.putExtra("username", username);
                 startActivity(intent);

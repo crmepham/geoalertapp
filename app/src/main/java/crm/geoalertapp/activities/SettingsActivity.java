@@ -1,18 +1,18 @@
 package crm.geoalertapp.activities;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.os.Vibrator;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -27,6 +27,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import crm.geoalertapp.R;
+import crm.geoalertapp.crm.geoalertapp.utilities.BaseHelper;
+import crm.geoalertapp.crm.geoalertapp.utilities.LocationUpdateReceiver;
 import crm.geoalertapp.crm.geoalertapp.utilities.SharedPreferencesService;
 
 public class SettingsActivity extends AppCompatActivity
@@ -96,7 +98,7 @@ public class SettingsActivity extends AppCompatActivity
         try {
             sensitivity = Integer.parseInt(SharedPreferencesService.getStringProperty(getApplicationContext(), "sensitivity"));
         }catch(Exception e){
-            sensitivity = 12;
+            sensitivity = 15;
         }
         seekBar.setProgress(sensitivity);
         t.setText(sensitivity.toString());
@@ -120,6 +122,10 @@ public class SettingsActivity extends AppCompatActivity
             public void onStopTrackingTouch(SeekBar seekBar) {
             }
         });
+
+        displayProfileMap = SharedPreferencesService.getStringProperty(getApplicationContext(), "displayProfileMap");
+        Button btn = (Button) findViewById(R.id.settingsProfileLocationButton);
+        btn.setText(displayProfileMap);
     }
 
     public void testSensitivity(View view) {
@@ -151,6 +157,13 @@ public class SettingsActivity extends AppCompatActivity
     }
 
     public void saveSettings(View view) {
+        if(!SharedPreferencesService.getStringProperty(getApplicationContext(), "displayProfileMap").equals(displayProfileMap)) {
+            if(displayProfileMap.equals("Enabled")){
+                LocationUpdateReceiver.SetAlarm(this, BaseHelper.INTERVAL_THIRTY_MINUTES);
+            }else{
+                LocationUpdateReceiver.CancelAlarm(this);
+            }
+        }
         SharedPreferencesService.setStringProperty(getApplicationContext(), "sensitivity", sensitivity.toString());
         SharedPreferencesService.setStringProperty(getApplicationContext(), "displayProfileMap", displayProfileMap);
         Toast.makeText(getApplicationContext(), "Settings saved", Toast.LENGTH_SHORT).show();
@@ -207,6 +220,7 @@ public class SettingsActivity extends AppCompatActivity
         } else if (id == R.id.nav_settings) {
             intent = new Intent(SettingsActivity.this, SettingsActivity.class);
         } else if (id == R.id.nav_logout) {
+            LocationUpdateReceiver.CancelAlarm(this);
             SharedPreferencesService.clearAllProperties(getApplicationContext());
             intent = new Intent(SettingsActivity.this, LoginActivity.class);
             startActivity(intent);

@@ -89,10 +89,14 @@ public class ProfileActivity extends AppCompatActivity
         if(ValidationHelper.isInternetConnected(getApplicationContext())) {
             LinearLayout l = (LinearLayout) findViewById(R.id.profile_container);
             l.setVisibility(View.VISIBLE);
-            Button btn = (Button) findViewById(R.id.profileLocationButton);
-            btn.setVisibility(View.VISIBLE);
-
             username = intent.getStringExtra("username");
+
+            String displayLocation = SharedPreferencesService.getStringProperty(getApplicationContext(), "displayProfileMap");
+
+            if(displayLocation.equals("Enabled")) {
+                Button btn = (Button) findViewById(R.id.profileLocationButton);
+                btn.setVisibility(View.VISIBLE);
+            }
 
             if(username != null){
                 ProfilePicturetask profilePicturetask = new ProfilePicturetask();
@@ -187,6 +191,11 @@ public class ProfileActivity extends AppCompatActivity
     public void editProfile(View view) {
         Intent intent = new Intent(ProfileActivity.this, EditProfileActivity.class);
         startActivityForResult(intent, 1);
+    }
+
+    public void viewLocation(View view) {
+        Intent intent = new Intent(ProfileActivity.this, LocationActivity.class);
+        startActivity(intent);
     }
 
     public void editProfileImage(View view) {
