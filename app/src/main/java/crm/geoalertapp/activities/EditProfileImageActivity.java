@@ -99,7 +99,7 @@ public class EditProfileImageActivity extends AppCompatActivity {
 
 
                         v.setVisibility(View.VISIBLE);
-                        if(size <= 100000) {
+                        if(size <= 200000) {
                             if(width < height) {
                                 t.setVisibility(View.INVISIBLE);
                                 btn.setVisibility(View.VISIBLE);

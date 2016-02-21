@@ -3,8 +3,9 @@
     <color name="colorPrimary">#000000</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FFEC921D</color>
+    <color name="softRed">#d5511c</color>
     <color name="loginBackground">#262626</color>
-
+    d5511c
 
     <!-- font colours -->
     <color name="inputColour">#545556</color>

@@ -14,6 +14,7 @@
     <uses-permission android:name="com.vogella.android.locationapi.maps.permission.MAPS_RECEIVE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
     <uses-permission android:name="com.android.alarm.permission.SET_ALARM"/>
+    <uses-permission android:name="android.permission.CALL_PHONE" />
 
     <permission
         android:name="com.vogella.android.locationapi.maps.permission.MAPS_RECEIVE"
@@ -32,18 +33,16 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <receiver android:name=".crm.geoalertapp.utilities.LocationUpdateReceiver"></receiver>
-
-        <receiver android:name="crm.geoalertapp.utilities.AutoStartLocationUpdateReceiver">
+        <receiver android:name=".crm.geoalertapp.utilities.LocationUpdateReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED"></action>
             </intent-filter>
         </receiver>
 
-        <service
-            android:name="crm.geoalertapp.utilities.UpdateLocationService"
-            android:enabled="true"
-            android:process=":update_location" >
+        <service android:name=".crm.geoalertapp.utilities.ShakeSensorService">
+            <intent-filter>
+                <action android:name="android.intent.action.ACTION_SCREEN_OFF"></action>
+            </intent-filter>
         </service>
 
         <meta-data

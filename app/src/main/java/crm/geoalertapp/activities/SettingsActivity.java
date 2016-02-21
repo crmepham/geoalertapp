@@ -1,6 +1,8 @@
 package crm.geoalertapp.activities;
 
 import android.app.AlarmManager;
+import android.app.Notification;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -34,9 +36,9 @@ import crm.geoalertapp.crm.geoalertapp.utilities.SharedPreferencesService;
 public class SettingsActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener{
 
-    SeekBar seekBar;
-    Integer sensitivity;
-    String displayProfileMap;
+    private SeekBar seekBar;
+    private Integer sensitivity;
+    private String displayProfileMap;
     private SensorManager mSensorManager;
     private float mAccel; // acceleration apart from gravity
     private float mAccelCurrent; // current acceleration including gravity
@@ -131,6 +133,26 @@ public class SettingsActivity extends AppCompatActivity
         btn.setText(displayProfileMap);
     }
 
+    public void testNotification(View view) {
+
+        Intent intent = new Intent(this, LocationActivity.class);
+        // put user details into into
+
+        PendingIntent pIntent = PendingIntent.getActivity(this, (int) System.currentTimeMillis(), intent, 0);
+
+        Notification n  = new Notification.Builder(this)
+                .setContentTitle("Alert: Chris Mepham")
+                .setContentText("Touch to view location details")
+                .setSmallIcon(R.drawable.icon_only_light)
+                .setContentIntent(pIntent)
+                .setAutoCancel(true)
+                .addAction(R.drawable.ic_call_black_24dp, "Call NOK", pIntent).build();
+
+        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        notificationManager.notify(0, n);
+
+    }
+
     public void testSensitivity(View view) {
         Button btn = (Button) findViewById(R.id.settingsTestSensitivityButton);
         String text = btn.getText().toString();
@@ -162,7 +184,7 @@ public class SettingsActivity extends AppCompatActivity
     public void saveSettings(View view) {
         if(!SharedPreferencesService.getStringProperty(getApplicationContext(), "displayProfileMap").equals(displayProfileMap)) {
             if(displayProfileMap.equals("Enabled")){
-                LocationUpdateReceiver.SetAlarm(this, BaseHelper.INTERVAL_THIRTY_MINUTES);
+                LocationUpdateReceiver.SetAlarm(this, BaseHelper.INTERVAL_FIFTEEN_MINUTES);
             }else{
                 LocationUpdateReceiver.CancelAlarm(this);
             }

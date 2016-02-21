@@ -144,7 +144,7 @@ public class RegisterActivity extends AppCompatActivity {
 
                 if(SharedPreferencesService.getStringProperty(getApplicationContext(), "displayProfileMap") == null) {
                     SharedPreferencesService.setStringProperty(getApplicationContext(), "displayProfileMap", "Enabled");
-                    LocationUpdateReceiver.SetAlarm(getApplicationContext(), BaseHelper.INTERVAL_THIRTY_MINUTES); // 30 mins approx.
+                    LocationUpdateReceiver.SetAlarm(getApplicationContext(), BaseHelper.INTERVAL_FIFTEEN_MINUTES); // 30 mins approx.
                 }
 
                 Intent intent = new Intent(RegisterActivity.this, ProfileActivity.class);

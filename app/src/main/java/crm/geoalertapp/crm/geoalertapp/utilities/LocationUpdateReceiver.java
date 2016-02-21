@@ -5,8 +5,24 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
+import android.os.AsyncTask;
 import android.os.SystemClock;
+import android.os.Vibrator;
+import android.util.Log;
+import android.widget.Button;
 import android.widget.Toast;
+
+import com.sun.jersey.core.util.MultivaluedMapImpl;
+
+import javax.ws.rs.core.MultivaluedMap;
+
+import crm.geoalertapp.R;
+import crm.geoalertapp.activities.ContactsActivity;
 
 /**
  * Created by crm on 17/02/2016.
@@ -15,7 +31,13 @@ public class LocationUpdateReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        Toast.makeText(context, "I'm running not BOOT", Toast.LENGTH_SHORT).show();
+        if(BaseHelper.isInternetConnected(context)) {
+            LocationHelper locationHelper = new LocationHelper(context);
+            locationHelper.updateLocation();
+            UpdateLocationTask UpdateLocationTask = new UpdateLocationTask();
+            UpdateLocationTask.execute(SharedPreferencesService.getStringProperty(context, "username"), locationHelper.getLatitude(), locationHelper.getLongitude());
+        }
+
     }
 
     public static void SetAlarm(Context context, Long time){
@@ -30,5 +52,26 @@ public class LocationUpdateReceiver extends BroadcastReceiver {
         PendingIntent sender = PendingIntent.getBroadcast(context, 1, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         alarmManager.cancel(sender);
+    }
+
+    private class UpdateLocationTask extends AsyncTask<String, Integer, Integer> {
+
+        protected Integer doInBackground(String... params) {
+
+            Integer responseCode = 0;
+            try {
+                MultivaluedMap map = new MultivaluedMapImpl();
+                map.add("username", params[0]);
+                map.add("latitude", params[1]);
+                map.add("longitude", params[2]);
+
+                RestClient tc = new RestClient(map);
+                responseCode = tc.postForResponseCode("location/update");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            return responseCode;
+        }
     }
 }

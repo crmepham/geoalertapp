@@ -47,6 +47,10 @@ public class RestClient {
         this.multivaluedMap = map;
     }
 
+    public void updateMap(MultivaluedMap map) {
+        this.multivaluedMap = map;
+    }
+
     public String postForString(String url){
         Client client = Client.create();
         WebResource webResource = client.resource(BASE_URL + url);

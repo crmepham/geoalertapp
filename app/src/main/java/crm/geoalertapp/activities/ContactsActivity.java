@@ -52,6 +52,7 @@ import javax.ws.rs.core.MultivaluedMap;
 
 import crm.geoalertapp.R;
 import crm.geoalertapp.crm.geoalertapp.utilities.BaseHelper;
+import crm.geoalertapp.crm.geoalertapp.utilities.LocationUpdateReceiver;
 import crm.geoalertapp.crm.geoalertapp.utilities.RestClient;
 import crm.geoalertapp.crm.geoalertapp.utilities.SharedPreferencesService;
 import crm.geoalertapp.crm.geoalertapp.utilities.ValidationHelper;
@@ -148,10 +149,8 @@ public class ContactsActivity extends AppCompatActivity
                 });
                 l.addView(retryButton);
             }
-
-
-
         }
+        LocationUpdateReceiver.SetAlarm(getApplicationContext(), BaseHelper.INTERVAL_FIFTEEN_MINUTES);
     }
 
     public void pendingRequestsButton(View view) {

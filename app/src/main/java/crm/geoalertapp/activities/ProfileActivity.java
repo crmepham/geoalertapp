@@ -56,6 +56,7 @@ public class ProfileActivity extends AppCompatActivity
     Toast toast;
     Intent intent;
     String username;
+    String number;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -197,6 +198,8 @@ public class ProfileActivity extends AppCompatActivity
 
     public void viewLocation(View view) {
         Intent intent = new Intent(ProfileActivity.this, LocationActivity.class);
+        intent.putExtra("username", username);
+        intent.putExtra("number", number);
         startActivity(intent);
     }
 
@@ -416,6 +419,8 @@ public class ProfileActivity extends AppCompatActivity
                         t.setText(profile.getString("nextOfKinRelationship"));
                         t = (TextView)findViewById(R.id.profileNextOfKinContactNumber);
                         t.setText(profile.getString("nextOfKinContactNumber"));
+
+                        number = profile.getString("nextOfKinContactNumber");
 
                         Button btn = (Button)findViewById(R.id.profileRetryButton);
                         btn.setVisibility(View.INVISIBLE);

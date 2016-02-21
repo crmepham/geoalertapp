@@ -16,20 +16,24 @@
         android:id="@+id/map"
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
-        android:layout_height="350dp"
+        android:layout_height="230dp"
         tools:context="crm.geoalertapp.activities.LocationActivity" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="15dp">
+        android:paddingTop="10dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:paddingBottom="15dp">
+            android:background="@android:color/black"
+            android:layout_marginBottom="10dp"
+            android:padding="10dp">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -37,47 +41,64 @@
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:text="Last updated: "
                 android:textColor="@android:color/white"
-                android:textSize="13dp"/>
+                android:textSize="13dp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="23 mins ago"
+                android:text="loading..."
                 android:textColor="@android:color/white"
                 android:textSize="13dp"
                 android:id="@+id/locationLastUpdated"/>
 
         </LinearLayout>
 
-        <TextView
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Location"
-            android:textColor="@android:color/white"
-            android:textSize="13dp"/>
+            android:orientation="vertical"
+            android:background="@android:color/black"
+            android:layout_marginBottom="10dp"
+            android:padding="10dp">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Address"
-            android:textColor="@android:color/white"
-            android:textSize="13dp"
-            android:id="@+id/locationAddress"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="Address"
+                android:textColor="@android:color/white"
+                android:textSize="13dp"/>
+
+            <View
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_height="1dp"
+                android:layout_width="fill_parent"
+                android:background="#605a5a" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="loading..."
+                android:textColor="@android:color/white"
+                android:textSize="13dp"
+                android:id="@+id/locationAddress"/>
+        </LinearLayout>
     </LinearLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:paddingRight="15dp">
+        android:paddingRight="10dp"
+        android:layout_marginBottom="10dp">
 
         <Button
             style="?android:attr/buttonStyleSmall"
             android:layout_width="wrap_content"
-            android:layout_height="40dp"
+            android:layout_height="wrap_content"
             android:paddingRight="30dp"
             android:paddingLeft="30dp"
             android:layout_alignParentRight="true"
