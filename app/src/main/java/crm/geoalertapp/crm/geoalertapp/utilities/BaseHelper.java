@@ -1,5 +1,6 @@
 package crm.geoalertapp.crm.geoalertapp.utilities;
 
+import android.app.ActivityManager;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -151,5 +152,15 @@ public class BaseHelper {
             Log.e("", e.getMessage());
         }
         return selectedBitmap;
+    }
+
+    public static boolean isServiceRunning(Class<?> serviceClass, Context context) {
+        ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
     }
 }

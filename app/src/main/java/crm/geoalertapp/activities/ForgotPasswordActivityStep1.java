@@ -16,8 +16,7 @@ import com.sun.jersey.core.util.MultivaluedMapImpl;
 import javax.ws.rs.core.MultivaluedMap;
 
 import crm.geoalertapp.R;
-import crm.geoalertapp.crm.geoalertapp.utilities.BaseHelper;
-import crm.geoalertapp.crm.geoalertapp.utilities.SharedPreferencesService;
+import crm.geoalertapp.crm.geoalertapp.utilities.SharedPreferencesHelper;
 import crm.geoalertapp.crm.geoalertapp.utilities.RestClient;
 import crm.geoalertapp.crm.geoalertapp.utilities.ValidationHelper;
 
@@ -94,7 +93,7 @@ public class ForgotPasswordActivityStep1 extends AppCompatActivity {
         protected void onPostExecute(Integer result) {
             progress.dismiss();
             if(result == 201) {
-                SharedPreferencesService.setStringProperty(getApplicationContext(), "email", email);
+                SharedPreferencesHelper.setStringProperty(getApplicationContext(), "email", email);
                 RetrieveSecurityQuestionTask retrieveSecurityQuestionTask = new RetrieveSecurityQuestionTask();
                 retrieveSecurityQuestionTask.execute(email);
             }else{
@@ -142,7 +141,7 @@ public class ForgotPasswordActivityStep1 extends AppCompatActivity {
             progress.dismiss();
 
             if(!result.isEmpty()) {
-                SharedPreferencesService.setStringProperty(getApplicationContext(), "securityQuestion", result);
+                SharedPreferencesHelper.setStringProperty(getApplicationContext(), "securityQuestion", result);
                 Intent intent = new Intent(ForgotPasswordActivityStep1.this, ForgotPasswordActivityStep2.class);
                 startActivity(intent);
             }else{

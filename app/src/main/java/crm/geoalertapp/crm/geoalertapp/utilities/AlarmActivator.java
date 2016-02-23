@@ -20,8 +20,8 @@ public class AlarmActivator extends Thread implements Runnable{
 
     public AlarmActivator(Context context){
         this.context = context;
-        username = SharedPreferencesService.getStringProperty(context, "username");
-        status = SharedPreferencesService.getStringProperty(context, "status");
+        username = SharedPreferencesHelper.getStringProperty(context, "username");
+        status = SharedPreferencesHelper.getStringProperty(context, "status");
         map = new MultivaluedMapImpl();
         tc = new RestClient(map);
     }
@@ -30,7 +30,6 @@ public class AlarmActivator extends Thread implements Runnable{
     public void run() {
         while(true) {
             try {
-                sleep(1000);
                 if(BaseHelper.isInternetConnected(context)) {
                     LocationHelper l = new LocationHelper(context);
 
@@ -39,6 +38,7 @@ public class AlarmActivator extends Thread implements Runnable{
                     notifyContacts();
                     break;
                 }
+                sleep(60000);
             } catch (InterruptedException e) {
                 Log.d("", e.getMessage());
             }
@@ -138,6 +138,56 @@ public class AlarmActivator extends Thread implements Runnable{
         } catch (Exception e) {
             e.printStackTrace();
             return false;
+        }
+    }
+
+    public static JSONArray getNotifications(String username) {
+        String jsonString = null;
+        try {
+            MultivaluedMap map = new MultivaluedMapImpl();
+            map.add("username", username);
+
+            RestClient tc = new RestClient(map);
+            jsonString = tc.postForString("user/retreive/notifications");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        if(!jsonString.contains("This user has no notifications")) {
+            try {
+                return new JSONArray(jsonString);
+            } catch (JSONException je) {
+                Log.d("", je.getMessage());
+                return new JSONArray();
+            }
+        }
+
+        return null;
+    }
+
+    public static void deleteNotification(Context context, String username) {
+        try {
+            MultivaluedMap map = new MultivaluedMapImpl();
+            map.add("username", username);
+            map.add("contactUsername", SharedPreferencesHelper.getStringProperty(context, "username"));
+
+            RestClient tc = new RestClient(map);
+            tc.postForString("user/delete/notification");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void cancelNotification(Context context, String username) {
+        try {
+            MultivaluedMap map = new MultivaluedMapImpl();
+            map.add("username", username);
+            map.add("contactUsername", SharedPreferencesHelper.getStringProperty(context, "username"));
+
+            RestClient tc = new RestClient(map);
+            tc.postForString("user/delete/notification");
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

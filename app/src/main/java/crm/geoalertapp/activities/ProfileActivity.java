@@ -3,17 +3,12 @@ package crm.geoalertapp.activities;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -23,9 +18,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.AbsListView;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -36,17 +29,12 @@ import com.sun.jersey.core.util.MultivaluedMapImpl;
 
 import org.json.JSONObject;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 import javax.ws.rs.core.MultivaluedMap;
 
 import crm.geoalertapp.R;
 import crm.geoalertapp.crm.geoalertapp.utilities.BaseHelper;
 import crm.geoalertapp.crm.geoalertapp.utilities.RestClient;
-import crm.geoalertapp.crm.geoalertapp.utilities.SharedPreferencesService;
-import crm.geoalertapp.crm.geoalertapp.utilities.StringEncrypter;
+import crm.geoalertapp.crm.geoalertapp.utilities.SharedPreferencesHelper;
 import crm.geoalertapp.crm.geoalertapp.utilities.ValidationHelper;
 
 public class ProfileActivity extends AppCompatActivity
@@ -81,7 +69,7 @@ public class ProfileActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
         View headerLayout = navigationView.getHeaderView(0);
         TextView tv = (TextView) headerLayout.findViewById(R.id.nav_header_username);
-        tv.setText(SharedPreferencesService.getStringProperty(getApplicationContext(), "username"));
+        tv.setText(SharedPreferencesHelper.getStringProperty(getApplicationContext(), "username"));
 
 
 
@@ -93,12 +81,12 @@ public class ProfileActivity extends AppCompatActivity
             l.setVisibility(View.VISIBLE);
             username = intent.getStringExtra("username");
 
-            String displayLocation = SharedPreferencesService.getStringProperty(getApplicationContext(), "displayProfileMap");
+            /*String displayLocation = SharedPreferencesHelper.getStringProperty(getApplicationContext(), "displayProfileMap");
 
             if(displayLocation.equals("Enabled")) {
                 Button btn = (Button) findViewById(R.id.profileLocationButton);
                 btn.setVisibility(View.VISIBLE);
-            }
+            }*/
 
             if(username != null){
                 ProfilePicturetask profilePicturetask = new ProfilePicturetask();
@@ -169,14 +157,14 @@ public class ProfileActivity extends AppCompatActivity
             intent = new Intent(ProfileActivity.this, ActivationActivity.class);
         } else if (id == R.id.nav_profile) {
             intent = new Intent(ProfileActivity.this, ProfileActivity.class);
-            intent.putExtra("username", SharedPreferencesService.getStringProperty(getApplicationContext(), "username"));
+            intent.putExtra("username", SharedPreferencesHelper.getStringProperty(getApplicationContext(), "username"));
         } else if (id == R.id.nav_contacts) {
             intent = new Intent(ProfileActivity.this, ContactsActivity.class);
         } else if (id == R.id.nav_settings) {
             intent = new Intent(ProfileActivity.this, SettingsActivity.class);
         } else if (id == R.id.nav_logout) {
-            SharedPreferencesService.removeKey(getApplicationContext(), "username");
-            SharedPreferencesService.removeKey(getApplicationContext(), "loggedIn");
+            SharedPreferencesHelper.removeKey(getApplicationContext(), "username");
+            SharedPreferencesHelper.removeKey(getApplicationContext(), "loggedIn");
             intent = new Intent(ProfileActivity.this, LoginActivity.class);
             startActivity(intent);
         }
@@ -204,7 +192,7 @@ public class ProfileActivity extends AppCompatActivity
     }
 
     public void editProfileImage(View view) {
-        if(username.equals(SharedPreferencesService.getStringProperty(getApplicationContext(), "username"))) {
+        if(username.equals(SharedPreferencesHelper.getStringProperty(getApplicationContext(), "username"))) {
             Intent intent = new Intent(ProfileActivity.this, EditProfileImageActivity.class);
             startActivityForResult(intent, 2);
         }else{
@@ -358,12 +346,19 @@ public class ProfileActivity extends AppCompatActivity
         protected void onPostExecute(String result) {
             progress.dismiss();
             if(result != null) {
-                SharedPreferencesService.setStringProperty(getApplication(), "profile", result);
+                SharedPreferencesHelper.setStringProperty(getApplication(), "profile", result);
 
                 try {
                     JSONObject profile = new JSONObject(result);
                     if(profile.length() > 0){
-                        String username = SharedPreferencesService.getStringProperty(getApplicationContext(), "username");
+
+                        Boolean showMap = profile.getBoolean("showMap");
+                        if(showMap){
+                            Button btn = (Button) findViewById(R.id.profileLocationButton);
+                            btn.setVisibility(View.VISIBLE);
+                        }
+
+                        String username = SharedPreferencesHelper.getStringProperty(getApplicationContext(), "username");
                         if(username.equals(profile.getString("username"))) {
                             Button b = (Button) findViewById(R.id.profileEditButton);
                             b.setVisibility(View.VISIBLE);

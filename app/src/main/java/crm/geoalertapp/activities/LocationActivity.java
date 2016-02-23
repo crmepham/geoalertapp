@@ -2,18 +2,12 @@ package crm.geoalertapp.activities;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,7 +29,7 @@ import crm.geoalertapp.R;
 import crm.geoalertapp.crm.geoalertapp.utilities.BaseHelper;
 import crm.geoalertapp.crm.geoalertapp.utilities.LocationHelper;
 import crm.geoalertapp.crm.geoalertapp.utilities.RestClient;
-import crm.geoalertapp.crm.geoalertapp.utilities.SharedPreferencesService;
+import crm.geoalertapp.crm.geoalertapp.utilities.SharedPreferencesHelper;
 import crm.geoalertapp.crm.geoalertapp.utilities.ValidationHelper;
 
 public class LocationActivity extends AppCompatActivity implements OnMapReadyCallback {
@@ -131,7 +125,7 @@ public class LocationActivity extends AppCompatActivity implements OnMapReadyCal
 
         protected void onPostExecute(String result) {
             if(result != null) {
-                SharedPreferencesService.setStringProperty(getApplication(), "location", result);
+                SharedPreferencesHelper.setStringProperty(getApplication(), "location", result);
                 try {
                     JSONObject profile = new JSONObject(result);
                     if(profile.length() > 0){

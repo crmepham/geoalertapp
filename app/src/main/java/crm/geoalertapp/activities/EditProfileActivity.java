@@ -3,22 +3,16 @@ package crm.geoalertapp.activities;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.sun.jersey.core.util.MultivaluedMapImpl;
@@ -26,9 +20,7 @@ import com.sun.jersey.core.util.MultivaluedMapImpl;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import javax.ws.rs.core.MultivaluedMap;
@@ -36,7 +28,7 @@ import javax.ws.rs.core.MultivaluedMap;
 import crm.geoalertapp.R;
 import crm.geoalertapp.crm.geoalertapp.utilities.BaseHelper;
 import crm.geoalertapp.crm.geoalertapp.utilities.RestClient;
-import crm.geoalertapp.crm.geoalertapp.utilities.SharedPreferencesService;
+import crm.geoalertapp.crm.geoalertapp.utilities.SharedPreferencesHelper;
 import crm.geoalertapp.crm.geoalertapp.utilities.ValidationHelper;
 
 public class EditProfileActivity extends AppCompatActivity {
@@ -56,7 +48,7 @@ public class EditProfileActivity extends AppCompatActivity {
 
         addSpinnerEntries();
 
-        String profile = SharedPreferencesService.getStringProperty(getApplicationContext(), "profile");
+        String profile = SharedPreferencesHelper.getStringProperty(getApplicationContext(), "profile");
         try{
             JSONObject obj = new JSONObject(profile);
             EditText t = (EditText) findViewById(R.id.editProfileFullName);
@@ -175,7 +167,7 @@ public class EditProfileActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         Intent intent = new Intent(EditProfileActivity.this, ProfileActivity.class);
-        intent.putExtra("username", SharedPreferencesService.getStringProperty(getApplicationContext(), "username"));
+        intent.putExtra("username", SharedPreferencesHelper.getStringProperty(getApplicationContext(), "username"));
         setResult(Activity.RESULT_OK, intent);
         finish();
         super.onBackPressed();
@@ -189,7 +181,7 @@ public class EditProfileActivity extends AppCompatActivity {
             String input = params[0];
             try {
                 MultivaluedMap map = new MultivaluedMapImpl();
-                map.add("username", SharedPreferencesService.getStringProperty(getApplicationContext(), "username"));
+                map.add("username", SharedPreferencesHelper.getStringProperty(getApplicationContext(), "username"));
                 map.add("profileInfo", input);
 
                 RestClient tc = new RestClient(map);
@@ -217,7 +209,7 @@ public class EditProfileActivity extends AppCompatActivity {
 
             if(result == 201) {
                 Intent intent = new Intent(EditProfileActivity.this, ProfileActivity.class);
-                intent.putExtra("username", SharedPreferencesService.getStringProperty(getApplicationContext(), "username"));
+                intent.putExtra("username", SharedPreferencesHelper.getStringProperty(getApplicationContext(), "username"));
                 setResult(Activity.RESULT_OK, intent);
                 finish();
             }else{

@@ -7,7 +7,7 @@ import android.preference.PreferenceManager;
 /**
  * Created by crm on 19/12/2015.
  */
-public class SharedPreferencesService {
+public class SharedPreferencesHelper {
 
     public static SharedPreferences getSharedPreferences(Context ctx) {
         return PreferenceManager.getDefaultSharedPreferences(ctx);

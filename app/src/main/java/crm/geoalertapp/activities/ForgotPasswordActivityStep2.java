@@ -4,10 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -21,9 +18,8 @@ import javax.ws.rs.core.MultivaluedMap;
 
 import crm.geoalertapp.R;
 import crm.geoalertapp.crm.geoalertapp.utilities.RestClient;
-import crm.geoalertapp.crm.geoalertapp.utilities.SharedPreferencesService;
+import crm.geoalertapp.crm.geoalertapp.utilities.SharedPreferencesHelper;
 import crm.geoalertapp.crm.geoalertapp.utilities.StringEncrypter;
-import crm.geoalertapp.crm.geoalertapp.utilities.ValidationHelper;
 
 public class ForgotPasswordActivityStep2 extends AppCompatActivity {
 
@@ -39,7 +35,7 @@ public class ForgotPasswordActivityStep2 extends AppCompatActivity {
         setContentView(R.layout.activity_forgot_password_step2);
 
         TextView tv = (TextView)findViewById(R.id.forgotPasswordQuestion);
-        tv.setText(SharedPreferencesService.getStringProperty(getApplicationContext(), "securityQuestion"));
+        tv.setText(SharedPreferencesHelper.getStringProperty(getApplicationContext(), "securityQuestion"));
     }
 
     public void navigateToLoginActivity(View view) {
@@ -76,8 +72,8 @@ public class ForgotPasswordActivityStep2 extends AppCompatActivity {
             try {
                 MultivaluedMap map = new MultivaluedMapImpl();
                 map.add("answer", StringEncrypter.encrypt(params[0]));
-                map.add("question", SharedPreferencesService.getStringProperty(getApplicationContext(), "securityQuestion"));
-                map.add("email", SharedPreferencesService.getStringProperty(getApplicationContext(), "email"));
+                map.add("question", SharedPreferencesHelper.getStringProperty(getApplicationContext(), "securityQuestion"));
+                map.add("email", SharedPreferencesHelper.getStringProperty(getApplicationContext(), "email"));
 
                 RestClient tc = new RestClient(map);
                 responseCode = tc.postForResponseCode("user/confirm/security/answer");
@@ -102,7 +98,7 @@ public class ForgotPasswordActivityStep2 extends AppCompatActivity {
         protected void onPostExecute(Integer result) {
             progress.dismiss();
             if(result == 201) {
-                SharedPreferencesService.setStringProperty(getApplicationContext(), "securityAnswer", answer);
+                SharedPreferencesHelper.setStringProperty(getApplicationContext(), "securityAnswer", answer);
                 Intent intent = new Intent(ForgotPasswordActivityStep2.this, ForgotPasswordActivityStep3.class);
                 startActivity(intent);
             }else{

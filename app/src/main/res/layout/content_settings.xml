@@ -133,27 +133,6 @@
 
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <Button
-                style="?android:attr/buttonStyleSmall"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="right"
-                android:paddingRight="15dp"
-                android:paddingLeft="15dp"
-                android:text="Start Notification"
-                android:textColor="@android:color/white"
-                android:background="@android:color/background_dark"
-                android:id="@+id/testNotification"
-                android:onClick="testNotification"/>
-
-        </LinearLayout>
-
-
     </LinearLayout>
 
 </ScrollView>

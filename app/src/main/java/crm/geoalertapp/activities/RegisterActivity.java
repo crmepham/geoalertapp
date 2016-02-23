@@ -22,7 +22,7 @@ import crm.geoalertapp.R;
 import crm.geoalertapp.crm.geoalertapp.utilities.BaseHelper;
 import crm.geoalertapp.crm.geoalertapp.utilities.LocationUpdateReceiver;
 import crm.geoalertapp.crm.geoalertapp.utilities.RestClient;
-import crm.geoalertapp.crm.geoalertapp.utilities.SharedPreferencesService;
+import crm.geoalertapp.crm.geoalertapp.utilities.SharedPreferencesHelper;
 import crm.geoalertapp.crm.geoalertapp.utilities.StringEncrypter;
 import crm.geoalertapp.crm.geoalertapp.utilities.ValidationHelper;
 
@@ -135,15 +135,15 @@ public class RegisterActivity extends AppCompatActivity {
             if(result == 201) {
                 EditText tv = (EditText) findViewById(R.id.registerUsername);
                 String username = tv.getText().toString();
-                SharedPreferencesService.setStringProperty(getApplicationContext(), "username", username);
-                SharedPreferencesService.setBooleanProperty(getApplicationContext(), "loggedIn", true);
+                SharedPreferencesHelper.setStringProperty(getApplicationContext(), "username", username);
+                SharedPreferencesHelper.setBooleanProperty(getApplicationContext(), "loggedIn", true);
 
-                if(SharedPreferencesService.getStringProperty(getApplicationContext(), "sensitivity") == null) {
-                    SharedPreferencesService.setStringProperty(getApplicationContext(), "sensitivity", "15");
+                if(SharedPreferencesHelper.getStringProperty(getApplicationContext(), "sensitivity") == null) {
+                    SharedPreferencesHelper.setStringProperty(getApplicationContext(), "sensitivity", "15");
                 }
 
-                if(SharedPreferencesService.getStringProperty(getApplicationContext(), "displayProfileMap") == null) {
-                    SharedPreferencesService.setStringProperty(getApplicationContext(), "displayProfileMap", "Enabled");
+                if(SharedPreferencesHelper.getStringProperty(getApplicationContext(), "displayProfileMap") == null) {
+                    SharedPreferencesHelper.setStringProperty(getApplicationContext(), "displayProfileMap", "Enabled");
                     LocationUpdateReceiver.SetAlarm(getApplicationContext(), BaseHelper.INTERVAL_FIFTEEN_MINUTES); // 30 mins approx.
                 }
 

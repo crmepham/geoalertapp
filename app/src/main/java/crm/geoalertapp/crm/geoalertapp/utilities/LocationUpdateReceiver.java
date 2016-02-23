@@ -5,24 +5,12 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
-import android.hardware.Sensor;
-import android.hardware.SensorEvent;
-import android.hardware.SensorEventListener;
-import android.hardware.SensorManager;
 import android.os.AsyncTask;
 import android.os.SystemClock;
-import android.os.Vibrator;
-import android.util.Log;
-import android.widget.Button;
-import android.widget.Toast;
 
 import com.sun.jersey.core.util.MultivaluedMapImpl;
 
 import javax.ws.rs.core.MultivaluedMap;
-
-import crm.geoalertapp.R;
-import crm.geoalertapp.activities.ContactsActivity;
 
 /**
  * Created by crm on 17/02/2016.
@@ -35,7 +23,7 @@ public class LocationUpdateReceiver extends BroadcastReceiver {
             LocationHelper locationHelper = new LocationHelper(context);
             locationHelper.updateLocation();
             UpdateLocationTask UpdateLocationTask = new UpdateLocationTask();
-            UpdateLocationTask.execute(SharedPreferencesService.getStringProperty(context, "username"), locationHelper.getLatitude(), locationHelper.getLongitude());
+            UpdateLocationTask.execute(SharedPreferencesHelper.getStringProperty(context, "username"), locationHelper.getLatitude(), locationHelper.getLongitude());
         }
 
     }

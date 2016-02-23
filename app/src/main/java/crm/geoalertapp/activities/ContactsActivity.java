@@ -1,17 +1,13 @@
 package crm.geoalertapp.activities;
 
-import android.app.ActionBar;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -24,37 +20,26 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import com.google.gson.reflect.TypeToken;
 import com.sun.jersey.core.util.MultivaluedMapImpl;
-
-import com.google.gson.JsonArray;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.lang.reflect.Type;
-import java.util.List;
-import java.util.Map;
-
 import javax.ws.rs.core.MultivaluedMap;
 
 import crm.geoalertapp.R;
+import crm.geoalertapp.crm.geoalertapp.services.RetreiveNotificationsService;
 import crm.geoalertapp.crm.geoalertapp.utilities.BaseHelper;
 import crm.geoalertapp.crm.geoalertapp.utilities.LocationUpdateReceiver;
 import crm.geoalertapp.crm.geoalertapp.utilities.RestClient;
-import crm.geoalertapp.crm.geoalertapp.utilities.SharedPreferencesService;
+import crm.geoalertapp.crm.geoalertapp.utilities.SharedPreferencesHelper;
 import crm.geoalertapp.crm.geoalertapp.utilities.ValidationHelper;
 
 public class ContactsActivity extends AppCompatActivity
@@ -94,12 +79,18 @@ public class ContactsActivity extends AppCompatActivity
 
         View headerLayout = navigationView.getHeaderView(0);
         TextView tv = (TextView) headerLayout.findViewById(R.id.nav_header_username);
-        tv.setText(SharedPreferencesService.getStringProperty(getApplicationContext(), "username"));
+        tv.setText(SharedPreferencesHelper.getStringProperty(getApplicationContext(), "username"));
 
         load();
     }
 
     private void load(){
+
+        if(!BaseHelper.isServiceRunning(RetreiveNotificationsService.class, this)) {
+            Intent myIntent = new Intent(this, RetreiveNotificationsService.class);
+            this.startService(myIntent);
+        }
+
         if(ValidationHelper.isInternetConnected(getApplicationContext())) {
             LinearLayout l = (LinearLayout) findViewById(R.id.contacts_container);
             if(retryButton != null) {
@@ -109,10 +100,10 @@ public class ContactsActivity extends AppCompatActivity
             progress.show();
 
             PendingRequestsTask pendingRequestsTask = new PendingRequestsTask();
-            pendingRequestsTask.execute(SharedPreferencesService.getStringProperty(getApplicationContext(), "username"));
+            pendingRequestsTask.execute(SharedPreferencesHelper.getStringProperty(getApplicationContext(), "username"));
 
             ContactsTask contactsTask = new ContactsTask();
-            contactsTask.execute(SharedPreferencesService.getStringProperty(getApplicationContext(), "username"));
+            contactsTask.execute(SharedPreferencesHelper.getStringProperty(getApplicationContext(), "username"));
         }else{
             LinearLayout l = (LinearLayout) findViewById(R.id.contacts_container);
             if(retryButton != null){
@@ -139,7 +130,7 @@ public class ContactsActivity extends AppCompatActivity
                             progress = ProgressDialog.show(ContactsActivity.this, "", "Retrieving contacts...", true);
                             progress.show();
                             ContactsTask contactsTask = new ContactsTask();
-                            contactsTask.execute(SharedPreferencesService.getStringProperty(getApplicationContext(), "username"));
+                            contactsTask.execute(SharedPreferencesHelper.getStringProperty(getApplicationContext(), "username"));
                         }else{
                             toast = Toast.makeText(getApplicationContext(), "", Toast.LENGTH_SHORT);
                             toast.setText("Could not retrieve contacts. No internet connection.");
@@ -209,14 +200,14 @@ public class ContactsActivity extends AppCompatActivity
             intent = new Intent(ContactsActivity.this, ActivationActivity.class);
         } else if (id == R.id.nav_profile) {
             intent = new Intent(ContactsActivity.this, ProfileActivity.class);
-            intent.putExtra("username", SharedPreferencesService.getStringProperty(getApplicationContext(), "username"));
+            intent.putExtra("username", SharedPreferencesHelper.getStringProperty(getApplicationContext(), "username"));
         } else if (id == R.id.nav_contacts) {
             intent = new Intent(ContactsActivity.this, ContactsActivity.class);
         } else if (id == R.id.nav_settings) {
             intent = new Intent(ContactsActivity.this, SettingsActivity.class);
         } else if (id == R.id.nav_logout) {
-            SharedPreferencesService.removeKey(getApplicationContext(), "username");
-            SharedPreferencesService.removeKey(getApplicationContext(), "loggedIn");
+            SharedPreferencesHelper.removeKey(getApplicationContext(), "username");
+            SharedPreferencesHelper.removeKey(getApplicationContext(), "loggedIn");
             intent = new Intent(ContactsActivity.this, LoginActivity.class);
             startActivity(intent);
         }
@@ -523,7 +514,7 @@ public class ContactsActivity extends AppCompatActivity
             Integer responseCode = 0;
             try {
                 MultivaluedMap map = new MultivaluedMapImpl();
-                map.add("username", SharedPreferencesService.getStringProperty(getApplicationContext(), "username"));
+                map.add("username", SharedPreferencesHelper.getStringProperty(getApplicationContext(), "username"));
                 map.add("contactId", params[0].toString());
 
                 RestClient tc = new RestClient(map);

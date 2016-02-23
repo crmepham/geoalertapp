@@ -6,6 +6,6 @@
     android:layout_height="wrap_content"
     android:textSize="15sp"
     android:gravity="center_horizontal"
-    android:textColor="@android:color/black"
+    android:textColor="@color/inputColour"
     android:padding="15dp"
     />

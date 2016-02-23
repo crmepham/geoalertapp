@@ -1,8 +1,7 @@
 package crm.geoalertapp.activities;
 
-import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -16,18 +15,25 @@ import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.sun.jersey.core.util.MultivaluedMapImpl;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import javax.ws.rs.core.MultivaluedMap;
 
 import crm.geoalertapp.R;
+import crm.geoalertapp.crm.geoalertapp.utilities.AlarmActivator;
 import crm.geoalertapp.crm.geoalertapp.utilities.BaseHelper;
 import crm.geoalertapp.crm.geoalertapp.utilities.RestClient;
-import crm.geoalertapp.crm.geoalertapp.utilities.ShakeSensorService;
-import crm.geoalertapp.crm.geoalertapp.utilities.SharedPreferencesService;
+import crm.geoalertapp.crm.geoalertapp.services.ShakeSensorService;
+import crm.geoalertapp.crm.geoalertapp.utilities.SharedPreferencesHelper;
 
 public class ActivationActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -53,7 +59,7 @@ public class ActivationActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
         View headerLayout = navigationView.getHeaderView(0);
         TextView tv = (TextView) headerLayout.findViewById(R.id.nav_header_username);
-        tv.setText(SharedPreferencesService.getStringProperty(getApplicationContext(), "username"));
+        tv.setText(SharedPreferencesHelper.getStringProperty(getApplicationContext(), "username"));
 
         shakeSensorService = new ShakeSensorService();
         updateStatus = true;
@@ -62,7 +68,23 @@ public class ActivationActivity extends AppCompatActivity
 
     private void setUpButton() {
 
-        sensor = SharedPreferencesService.getStringProperty(getApplication(), "sensor");
+        // get from DB
+        boolean goReset = getIntent().getBooleanExtra("goReset", false);
+        if(!goReset) {
+            if (BaseHelper.isInternetConnected(getApplicationContext())) {
+                ActivationTask activationTask = new ActivationTask();
+                activationTask.execute();
+            } else {
+                sensor = SharedPreferencesHelper.getStringProperty(getApplication(), "sensor");
+                addButton();
+            }
+        }else{
+            sensor = "RESET";
+            addButton();
+        }
+    }
+
+    private void addButton() {
         TextView t = (TextView)findViewById(R.id.sensorButton);
         if(sensor == null || sensor.equals("ACTIVATE")) {
             t.setBackgroundResource(R.drawable.activatebutton);
@@ -79,6 +101,8 @@ public class ActivationActivity extends AppCompatActivity
             t = (TextView)findViewById(R.id.sensorNotification);
             t.setVisibility(View.VISIBLE);
         }
+        t = (TextView)findViewById(R.id.sensorButton);
+        t.setVisibility(View.VISIBLE);
     }
 
     public void activateSensor(View view) throws Exception {
@@ -93,11 +117,11 @@ public class ActivationActivity extends AppCompatActivity
                 t.setVisibility(View.INVISIBLE);
                 // update remote status
                 // and local ??
-                SharedPreferencesService.setStringProperty(getApplicationContext(), "status", "Active");
+                SharedPreferencesHelper.setStringProperty(getApplicationContext(), "status", "Active");
                 updateRemoteStatus();
 
                 Toast.makeText(getApplicationContext(), "Sensor activated. Status changed to Active.", Toast.LENGTH_SHORT).show();
-                SharedPreferencesService.setStringProperty(getApplicationContext(), "sensor", "DEACTIVATE");
+                SharedPreferencesHelper.setStringProperty(getApplicationContext(), "sensor", "DEACTIVATE");
                 //ShakeSensorService.SetAlarm(getApplicationContext());
 
                 break;
@@ -108,17 +132,17 @@ public class ActivationActivity extends AppCompatActivity
                 t.setText("ACTIVATE");
                 t = (TextView)findViewById(R.id.sensorNotification);
                 t.setVisibility(View.INVISIBLE);
-                SharedPreferencesService.setStringProperty(getApplicationContext(), "sensor", "ACTIVATE");
+                SharedPreferencesHelper.setStringProperty(getApplicationContext(), "sensor", "ACTIVATE");
 
                 // update remote status
                 // and local ??
-                SharedPreferencesService.setStringProperty(getApplicationContext(), "status", "Inactive");
+                SharedPreferencesHelper.setStringProperty(getApplicationContext(), "status", "Inactive");
                 updateRemoteStatus();
 
                 Toast.makeText(getApplicationContext(), "Sensor deactivated. Status changed to Inactive.", Toast.LENGTH_SHORT).show();
                 break;
             case "RESET":
-                SharedPreferencesService.setStringProperty(getApplicationContext(), "status", "Inactive");
+                SharedPreferencesHelper.setStringProperty(getApplicationContext(), "status", "Inactive");
                 updateRemoteStatus();
                 if(BaseHelper.isInternetConnected(getApplicationContext())) {
                     t.setBackgroundResource(R.drawable.activatebutton);
@@ -126,15 +150,15 @@ public class ActivationActivity extends AppCompatActivity
                     t.setText("ACTIVATE");
                     t = (TextView) findViewById(R.id.sensorNotification);
                     t.setVisibility(View.INVISIBLE);
-                    SharedPreferencesService.setStringProperty(getApplicationContext(), "sensor", "ACTIVATE");
+                    SharedPreferencesHelper.setStringProperty(getApplicationContext(), "sensor", "ACTIVATE");
                     Toast.makeText(getApplicationContext(), "Status changed to Inactive.", Toast.LENGTH_SHORT).show();
-                    // send notification to contacts???
                 }else{
                     Toast.makeText(getApplicationContext(), "Could not reset status. No internet connection.", Toast.LENGTH_SHORT).show();
                 }
                 break;
         }
     }
+
 
     private void updateRemoteStatus() {
         if(updateStatus){
@@ -189,14 +213,14 @@ public class ActivationActivity extends AppCompatActivity
             intent = new Intent(ActivationActivity.this, ActivationActivity.class);
         } else if (id == R.id.nav_profile) {
             intent = new Intent(ActivationActivity.this, ProfileActivity.class);
-            intent.putExtra("username", SharedPreferencesService.getStringProperty(getApplicationContext(), "username"));
+            intent.putExtra("username", SharedPreferencesHelper.getStringProperty(getApplicationContext(), "username"));
         } else if (id == R.id.nav_contacts) {
             intent = new Intent(ActivationActivity.this, ContactsActivity.class);
         } else if (id == R.id.nav_settings) {
             intent = new Intent(ActivationActivity.this, SettingsActivity.class);
         } else if (id == R.id.nav_logout) {
-            SharedPreferencesService.removeKey(getApplicationContext(), "username");
-            SharedPreferencesService.removeKey(getApplicationContext(), "loggedIn");
+            SharedPreferencesHelper.removeKey(getApplicationContext(), "username");
+            SharedPreferencesHelper.removeKey(getApplicationContext(), "loggedIn");
             intent = new Intent(ActivationActivity.this, LoginActivity.class);
             startActivity(intent);
         }
@@ -212,8 +236,8 @@ public class ActivationActivity extends AppCompatActivity
         protected Integer doInBackground(String... params) {
             try {
                 MultivaluedMap map = new MultivaluedMapImpl();
-                map.add("username", SharedPreferencesService.getStringProperty(getApplicationContext(), "username"));
-                map.add("status", SharedPreferencesService.getStringProperty(getApplicationContext(), "status"));
+                map.add("username", SharedPreferencesHelper.getStringProperty(getApplicationContext(), "username"));
+                map.add("status", SharedPreferencesHelper.getStringProperty(getApplicationContext(), "status"));
 
                 RestClient tc = new RestClient(map);
                 while(true) {
@@ -241,6 +265,55 @@ public class ActivationActivity extends AppCompatActivity
 
         protected void onPostExecute(Integer result) {
             updateStatus = true;
+        }
+    }
+
+    private class ActivationTask extends AsyncTask<String, Integer, String> {
+
+        protected String doInBackground(String... params) {
+
+            String jsonString = null;
+            try {
+                MultivaluedMap map = new MultivaluedMapImpl();
+                map.add("username", SharedPreferencesHelper.getStringProperty(getApplicationContext(), "username"));
+
+                RestClient tc = new RestClient(map);
+                jsonString = tc.postForString("user/retreive/status");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return jsonString;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected void onProgressUpdate(Integer... progress) {
+            super.onProgressUpdate(progress);
+        }
+
+        protected void onPostExecute(String status) {
+            if(status != null) {
+                SharedPreferencesHelper.setStringProperty(getApplication(), "status", status);
+                switch(status) {
+                    case "Inactive":
+                        sensor = "ACTIVATE";
+                        break;
+                    case "Active":
+                        sensor = "DEACTIVATE";
+                        break;
+                    case "Alert":
+                        sensor = "RESET";
+                        break;
+                }
+
+            }else{
+                sensor = SharedPreferencesHelper.getStringProperty(getApplication(), "sensor");
+            }
+            addButton();
         }
     }
 }

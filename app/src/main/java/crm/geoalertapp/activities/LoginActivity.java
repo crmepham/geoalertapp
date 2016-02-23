@@ -2,14 +2,12 @@ package crm.geoalertapp.activities;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -21,7 +19,7 @@ import crm.geoalertapp.R;
 import crm.geoalertapp.crm.geoalertapp.utilities.BaseHelper;
 import crm.geoalertapp.crm.geoalertapp.utilities.LocationUpdateReceiver;
 import crm.geoalertapp.crm.geoalertapp.utilities.RestClient;
-import crm.geoalertapp.crm.geoalertapp.utilities.SharedPreferencesService;
+import crm.geoalertapp.crm.geoalertapp.utilities.SharedPreferencesHelper;
 import crm.geoalertapp.crm.geoalertapp.utilities.StringEncrypter;
 import crm.geoalertapp.crm.geoalertapp.utilities.ValidationHelper;
 
@@ -36,7 +34,7 @@ public class LoginActivity extends AppCompatActivity {
         getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         super.onCreate(savedInstanceState);
-        boolean loggedIn = SharedPreferencesService.getBooleanProperty(getApplicationContext(), "loggedIn");
+        boolean loggedIn = SharedPreferencesHelper.getBooleanProperty(getApplicationContext(), "loggedIn");
         // check loggedIn here
         if(loggedIn){
             Intent intent = new Intent(LoginActivity.this, ContactsActivity.class);
@@ -122,9 +120,9 @@ public class LoginActivity extends AppCompatActivity {
         protected void onPostExecute(Integer result) {
             progress.dismiss();
             if(result == 200) {
-                SharedPreferencesService.setBooleanProperty(getApplicationContext(), "loggedIn", true);
-                SharedPreferencesService.setStringProperty(getApplication(), "username", username);
-                if(SharedPreferencesService.getStringProperty(getApplicationContext(), "displayProfileMap").equals("Enabled")) {
+                SharedPreferencesHelper.setBooleanProperty(getApplicationContext(), "loggedIn", true);
+                SharedPreferencesHelper.setStringProperty(getApplication(), "username", username);
+                if(SharedPreferencesHelper.getStringProperty(getApplicationContext(), "displayProfileMap").equals("Enabled")) {
                     LocationUpdateReceiver.SetAlarm(getApplicationContext(), BaseHelper.INTERVAL_FIFTEEN_MINUTES); // 30 mins approx.
                 }
 

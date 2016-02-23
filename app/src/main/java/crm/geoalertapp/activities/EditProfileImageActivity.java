@@ -5,13 +5,10 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -21,24 +18,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.internal.http.multipart.MultipartEntity;
-import com.sun.jersey.api.client.Client;
-import com.sun.jersey.core.util.MultivaluedMapImpl;
-
-import org.w3c.dom.Text;
-
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
-
-import javax.ws.rs.core.MultivaluedMap;
-
 import crm.geoalertapp.R;
 import crm.geoalertapp.crm.geoalertapp.utilities.BaseHelper;
 import crm.geoalertapp.crm.geoalertapp.utilities.RestClient;
-import crm.geoalertapp.crm.geoalertapp.utilities.SharedPreferencesService;
+import crm.geoalertapp.crm.geoalertapp.utilities.SharedPreferencesHelper;
 
 public class EditProfileImageActivity extends AppCompatActivity {
 
@@ -133,7 +116,7 @@ public class EditProfileImageActivity extends AppCompatActivity {
             int responseCode = 0;
             try {
                 RestClient tc = new RestClient();
-                responseCode = tc.postFileForResponseCode(SharedPreferencesService.getStringProperty(getApplicationContext(), "username"), "user/upload/profile/image", bitmap);
+                responseCode = tc.postFileForResponseCode(SharedPreferencesHelper.getStringProperty(getApplicationContext(), "username"), "user/upload/profile/image", bitmap);
             } catch (Exception e) {
                 Log.e("", e.getMessage());
             }
@@ -158,7 +141,7 @@ public class EditProfileImageActivity extends AppCompatActivity {
 
             if(result == 201) {
                 Intent intent = new Intent(EditProfileImageActivity.this, ProfileActivity.class);
-                intent.putExtra("username", SharedPreferencesService.getStringProperty(getApplicationContext(), "username"));
+                intent.putExtra("username", SharedPreferencesHelper.getStringProperty(getApplicationContext(), "username"));
                 setResult(Activity.RESULT_OK, intent);
                 finish();
             }else{

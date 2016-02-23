@@ -22,7 +22,8 @@
         android:paddingLeft="45dp"
         android:layout_marginTop="50dp"
         android:onClick="activateSensor"
-        android:id="@+id/sensorButton"/>
+        android:id="@+id/sensorButton"
+        android:visibility="gone"/>
 
     <TextView
         android:layout_width="match_parent"

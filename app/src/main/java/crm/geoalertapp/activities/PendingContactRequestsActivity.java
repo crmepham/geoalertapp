@@ -5,11 +5,8 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.Layout;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -29,7 +26,7 @@ import javax.ws.rs.core.MultivaluedMap;
 
 import crm.geoalertapp.R;
 import crm.geoalertapp.crm.geoalertapp.utilities.RestClient;
-import crm.geoalertapp.crm.geoalertapp.utilities.SharedPreferencesService;
+import crm.geoalertapp.crm.geoalertapp.utilities.SharedPreferencesHelper;
 
 public class PendingContactRequestsActivity extends AppCompatActivity {
 
@@ -143,7 +140,7 @@ public class PendingContactRequestsActivity extends AppCompatActivity {
             Integer responseCode = 0;
             try {
                 MultivaluedMap map = new MultivaluedMapImpl();
-                map.add("username", SharedPreferencesService.getStringProperty(getApplicationContext(), "username"));
+                map.add("username", SharedPreferencesHelper.getStringProperty(getApplicationContext(), "username"));
                 map.add("userId", params[0].toString());
                 RestClient tc = new RestClient(map);
 

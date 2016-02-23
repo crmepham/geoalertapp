@@ -74,7 +74,8 @@
             android:id="@+id/profile_container"
             android:visibility="gone"
             android:paddingLeft="10dp"
-            android:paddingRight="10dp">
+            android:paddingRight="10dp"
+            android:layout_marginTop="10dp">
 
             <LinearLayout
                 android:orientation="horizontal"

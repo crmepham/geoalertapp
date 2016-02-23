@@ -1,7 +1,5 @@
-package crm.geoalertapp.crm.geoalertapp.utilities;
+package crm.geoalertapp.crm.geoalertapp.services;
 
-import android.app.AlarmManager;
-import android.app.PendingIntent;
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -11,6 +9,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.os.AsyncTask;
 import android.os.IBinder;
 import android.os.Vibrator;
 import android.support.annotation.Nullable;
@@ -19,16 +18,13 @@ import android.widget.Toast;
 
 import com.sun.jersey.core.util.MultivaluedMapImpl;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.Arrays;
-import java.util.Iterator;
-
 import javax.ws.rs.core.MultivaluedMap;
 
 import crm.geoalertapp.activities.ActivationActivity;
+import crm.geoalertapp.crm.geoalertapp.utilities.AlarmActivator;
+import crm.geoalertapp.crm.geoalertapp.utilities.BaseHelper;
+import crm.geoalertapp.crm.geoalertapp.utilities.RestClient;
+import crm.geoalertapp.crm.geoalertapp.utilities.SharedPreferencesHelper;
 
 public class ShakeSensorService extends Service implements SensorEventListener {
 
@@ -79,19 +75,20 @@ public class ShakeSensorService extends Service implements SensorEventListener {
         mAccel = mAccel * 0.9f + delta; // perform low-cut filter
 
         if(sensitivity == null){
-            sensitivity = Integer.parseInt(SharedPreferencesService.getStringProperty(context, "sensitivity"));
+            sensitivity = Integer.parseInt(SharedPreferencesHelper.getStringProperty(context, "sensitivity"));
         }
 
         if (mAccel > sensitivity) {
             mSensorEventManager.unregisterListener(ShakeSensorService.this);
-            SharedPreferencesService.setStringProperty(context, "sensor", "RESET");
-            SharedPreferencesService.setStringProperty(context, "status", "Alert");
+            SharedPreferencesHelper.setStringProperty(context, "sensor", "RESET");
+            SharedPreferencesHelper.setStringProperty(context, "status", "Alert");
             Vibrator v = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
             v.vibrate(500);
             Toast.makeText(context, "Device shake registered.", Toast.LENGTH_SHORT).show();
             AlarmActivator activator = new AlarmActivator(context);
             activator.start();
             Intent intent = new Intent(context, ActivationActivity.class);
+            intent.putExtra("goReset", true);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(intent);
         }
@@ -115,7 +112,7 @@ public class ShakeSensorService extends Service implements SensorEventListener {
     public boolean activateSensor(Context context) throws Exception {
         IntentFilter filter = new IntentFilter(Intent.ACTION_SCREEN_OFF);
         context.registerReceiver(mReceiver, filter);
-        sensitivity = Integer.parseInt(SharedPreferencesService.getStringProperty(context, "sensitivity"));
+        sensitivity = Integer.parseInt(SharedPreferencesHelper.getStringProperty(context, "sensitivity"));
         this.context = context;
         mAccel = 0.00f;
         mAccelCurrent = SensorManager.GRAVITY_EARTH;
@@ -142,6 +139,39 @@ public class ShakeSensorService extends Service implements SensorEventListener {
             return false;
         }
     }
+    private class UpdateStatusTask extends AsyncTask<String, Integer, Integer> {
 
+        protected Integer doInBackground(String... params) {
+            try {
+                MultivaluedMap map = new MultivaluedMapImpl();
+                map.add("username", SharedPreferencesHelper.getStringProperty(getApplicationContext(), "username"));
+                map.add("status", SharedPreferencesHelper.getStringProperty(getApplicationContext(), "status"));
+
+                RestClient tc = new RestClient(map);
+                while(true) {
+                    if(BaseHelper.isInternetConnected(getApplicationContext())) {
+                        tc.postForResponseCode("user/update/status");
+                        break;
+                    }
+                }
+            } catch (Exception e) {
+                Log.e("", e.getMessage());
+            }
+            return 0;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected void onProgressUpdate(Integer... progress) {
+            super.onProgressUpdate(progress);
+        }
+
+        protected void onPostExecute(Integer result) {
+        }
+    }
 
 }

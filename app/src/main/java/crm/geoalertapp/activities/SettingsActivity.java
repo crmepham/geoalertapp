@@ -1,9 +1,5 @@
 package crm.geoalertapp.activities;
 
-import android.app.AlarmManager;
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -11,8 +7,8 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.os.Vibrator;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -28,10 +24,15 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.sun.jersey.core.util.MultivaluedMapImpl;
+
+import javax.ws.rs.core.MultivaluedMap;
+
 import crm.geoalertapp.R;
 import crm.geoalertapp.crm.geoalertapp.utilities.BaseHelper;
 import crm.geoalertapp.crm.geoalertapp.utilities.LocationUpdateReceiver;
-import crm.geoalertapp.crm.geoalertapp.utilities.SharedPreferencesService;
+import crm.geoalertapp.crm.geoalertapp.utilities.RestClient;
+import crm.geoalertapp.crm.geoalertapp.utilities.SharedPreferencesHelper;
 
 public class SettingsActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener{
@@ -56,7 +57,7 @@ public class SettingsActivity extends AppCompatActivity
             mAccel = mAccel * 0.9f + delta; // perform low-cut filter
 
             if(sensitivity == null){
-                sensitivity = Integer.parseInt(SharedPreferencesService.getStringProperty(getApplicationContext(), "sensitivity"));
+                sensitivity = Integer.parseInt(SharedPreferencesHelper.getStringProperty(getApplicationContext(), "sensitivity"));
             }
 
             if (mAccel > sensitivity) {
@@ -92,7 +93,7 @@ public class SettingsActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
         View headerLayout = navigationView.getHeaderView(0);
         TextView tv = (TextView) headerLayout.findViewById(R.id.nav_header_username);
-        tv.setText(SharedPreferencesService.getStringProperty(getApplicationContext(), "username"));
+        tv.setText(SharedPreferencesHelper.getStringProperty(getApplicationContext(), "username"));
 
         mAccel = 0.00f;
         mAccelCurrent = SensorManager.GRAVITY_EARTH;
@@ -101,7 +102,7 @@ public class SettingsActivity extends AppCompatActivity
         final TextView t = (TextView) findViewById(R.id.settingsSeekBarValue);
         seekBar = (SeekBar) findViewById(R.id.settingsSeekBar);
         try {
-            sensitivity = Integer.parseInt(SharedPreferencesService.getStringProperty(getApplicationContext(), "sensitivity"));
+            sensitivity = Integer.parseInt(SharedPreferencesHelper.getStringProperty(getApplicationContext(), "sensitivity"));
         }catch(Exception e){
             sensitivity = 15;
         }
@@ -128,29 +129,9 @@ public class SettingsActivity extends AppCompatActivity
             }
         });
 
-        displayProfileMap = SharedPreferencesService.getStringProperty(getApplicationContext(), "displayProfileMap");
+        displayProfileMap = SharedPreferencesHelper.getStringProperty(getApplicationContext(), "displayProfileMap");
         Button btn = (Button) findViewById(R.id.settingsProfileLocationButton);
         btn.setText(displayProfileMap);
-    }
-
-    public void testNotification(View view) {
-
-        Intent intent = new Intent(this, LocationActivity.class);
-        // put user details into into
-
-        PendingIntent pIntent = PendingIntent.getActivity(this, (int) System.currentTimeMillis(), intent, 0);
-
-        Notification n  = new Notification.Builder(this)
-                .setContentTitle("Alert: Chris Mepham")
-                .setContentText("Touch to view location details")
-                .setSmallIcon(R.drawable.icon_only_light)
-                .setContentIntent(pIntent)
-                .setAutoCancel(true)
-                .addAction(R.drawable.ic_call_black_24dp, "Call NOK", pIntent).build();
-
-        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        notificationManager.notify(0, n);
-
     }
 
     public void testSensitivity(View view) {
@@ -182,16 +163,45 @@ public class SettingsActivity extends AppCompatActivity
     }
 
     public void saveSettings(View view) {
-        if(!SharedPreferencesService.getStringProperty(getApplicationContext(), "displayProfileMap").equals(displayProfileMap)) {
-            if(displayProfileMap.equals("Enabled")){
-                LocationUpdateReceiver.SetAlarm(this, BaseHelper.INTERVAL_FIFTEEN_MINUTES);
-            }else{
-                LocationUpdateReceiver.CancelAlarm(this);
+        if(displayProfileMap.equals("Enabled")){
+            LocationUpdateReceiver.SetAlarm(this, BaseHelper.INTERVAL_FIFTEEN_MINUTES);
+        }else{
+            LocationUpdateReceiver.CancelAlarm(this);
+        }
+        UpdateShowMapTask UpdateLocationTask = new UpdateShowMapTask();
+        UpdateLocationTask.execute();
+
+        SharedPreferencesHelper.setStringProperty(getApplicationContext(), "displayProfileMap", displayProfileMap);
+        SharedPreferencesHelper.setStringProperty(getApplicationContext(), "sensitivity", sensitivity.toString());
+        Toast.makeText(getApplicationContext(), "Settings saved", Toast.LENGTH_SHORT).show();
+    }
+
+    private class UpdateShowMapTask extends AsyncTask<String, Integer, Integer> {
+
+        protected Integer doInBackground(String... params) {
+
+            Integer responseCode = 0;
+            try {
+                MultivaluedMap map = new MultivaluedMapImpl();
+                map.add("username", SharedPreferencesHelper.getStringProperty(getApplicationContext(), "username"));
+                map.add("showMap", (displayProfileMap.equals("Enabled") ? "true" : "false"));
+
+                RestClient tc = new RestClient(map);
+                responseCode = tc.postForResponseCode("user/update/map/view");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            return responseCode;
+        }
+
+        @Override
+        protected void onPostExecute(Integer integer) {
+            super.onPostExecute(integer);
+            if(integer == 201){
+
             }
         }
-        SharedPreferencesService.setStringProperty(getApplicationContext(), "sensitivity", sensitivity.toString());
-        SharedPreferencesService.setStringProperty(getApplicationContext(), "displayProfileMap", displayProfileMap);
-        Toast.makeText(getApplicationContext(), "Settings saved", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -239,15 +249,15 @@ public class SettingsActivity extends AppCompatActivity
             intent = new Intent(SettingsActivity.this, ActivationActivity.class);
         } else if (id == R.id.nav_profile) {
             intent = new Intent(SettingsActivity.this, ProfileActivity.class);
-            intent.putExtra("username", SharedPreferencesService.getStringProperty(getApplicationContext(), "username"));
+            intent.putExtra("username", SharedPreferencesHelper.getStringProperty(getApplicationContext(), "username"));
         } else if (id == R.id.nav_contacts) {
             intent = new Intent(SettingsActivity.this, ContactsActivity.class);
         } else if (id == R.id.nav_settings) {
             intent = new Intent(SettingsActivity.this, SettingsActivity.class);
         } else if (id == R.id.nav_logout) {
             LocationUpdateReceiver.CancelAlarm(this);
-            SharedPreferencesService.removeKey(getApplicationContext(), "username");
-            SharedPreferencesService.removeKey(getApplicationContext(), "loggedIn");
+            SharedPreferencesHelper.removeKey(getApplicationContext(), "username");
+            SharedPreferencesHelper.removeKey(getApplicationContext(), "loggedIn");
             intent = new Intent(SettingsActivity.this, LoginActivity.class);
             startActivity(intent);
         }

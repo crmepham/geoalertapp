@@ -1,16 +1,12 @@
 package crm.geoalertapp.activities;
 
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.sun.jersey.core.util.MultivaluedMapImpl;
@@ -19,7 +15,7 @@ import javax.ws.rs.core.MultivaluedMap;
 
 import crm.geoalertapp.R;
 import crm.geoalertapp.crm.geoalertapp.utilities.RestClient;
-import crm.geoalertapp.crm.geoalertapp.utilities.SharedPreferencesService;
+import crm.geoalertapp.crm.geoalertapp.utilities.SharedPreferencesHelper;
 
 public class AddContactActivity extends AppCompatActivity {
 
@@ -39,7 +35,7 @@ public class AddContactActivity extends AppCompatActivity {
         EditText e = (EditText)findViewById(R.id.addContactUsername);
         String contactUsername = e.getText().toString();
 
-        if(!contactUsername.equals(SharedPreferencesService.getStringProperty(getApplicationContext(), "username"))){
+        if(!contactUsername.equals(SharedPreferencesHelper.getStringProperty(getApplicationContext(), "username"))){
             AddContactTask addContactTask = new AddContactTask();
             addContactTask.execute(contactUsername);
         }else{
@@ -60,7 +56,7 @@ public class AddContactActivity extends AppCompatActivity {
             Integer responseCode = 0;
             try {
                 MultivaluedMap map = new MultivaluedMapImpl();
-                map.add("username", SharedPreferencesService.getStringProperty(getApplicationContext(), "username"));
+                map.add("username", SharedPreferencesHelper.getStringProperty(getApplicationContext(), "username"));
                 map.add("contactUsername", params[0]);
 
                 RestClient tc = new RestClient(map);

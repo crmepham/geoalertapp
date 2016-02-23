@@ -17,7 +17,7 @@ import javax.ws.rs.core.MultivaluedMap;
 
 import crm.geoalertapp.R;
 import crm.geoalertapp.crm.geoalertapp.utilities.RestClient;
-import crm.geoalertapp.crm.geoalertapp.utilities.SharedPreferencesService;
+import crm.geoalertapp.crm.geoalertapp.utilities.SharedPreferencesHelper;
 import crm.geoalertapp.crm.geoalertapp.utilities.StringEncrypter;
 import crm.geoalertapp.crm.geoalertapp.utilities.ValidationHelper;
 
@@ -66,9 +66,9 @@ public class ForgotPasswordActivityStep3 extends AppCompatActivity {
             try {
                 MultivaluedMap map = new MultivaluedMapImpl();
                 map.add("newPassword", StringEncrypter.encrypt(params[0]));
-                map.add("email", SharedPreferencesService.getStringProperty(getApplicationContext(), "email"));
-                map.add("securityQuestion", SharedPreferencesService.getStringProperty(getApplicationContext(), "securityQuestion"));
-                map.add("securityAnswer", StringEncrypter.encrypt(SharedPreferencesService.getStringProperty(getApplicationContext(), "securityAnswer")));
+                map.add("email", SharedPreferencesHelper.getStringProperty(getApplicationContext(), "email"));
+                map.add("securityQuestion", SharedPreferencesHelper.getStringProperty(getApplicationContext(), "securityQuestion"));
+                map.add("securityAnswer", StringEncrypter.encrypt(SharedPreferencesHelper.getStringProperty(getApplicationContext(), "securityAnswer")));
 
                 RestClient tc = new RestClient(map);
                 responseCode = tc.postForResponseCode("user/save/new/password");
