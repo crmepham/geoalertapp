@@ -110,6 +110,7 @@ public class ShakeSensorService extends Service implements SensorEventListener {
     }
 
     public boolean activateSensor(Context context) throws Exception {
+        try {
         IntentFilter filter = new IntentFilter(Intent.ACTION_SCREEN_OFF);
         context.registerReceiver(mReceiver, filter);
         sensitivity = Integer.parseInt(SharedPreferencesHelper.getStringProperty(context, "sensitivity"));
@@ -117,7 +118,7 @@ public class ShakeSensorService extends Service implements SensorEventListener {
         mAccel = 0.00f;
         mAccelCurrent = SensorManager.GRAVITY_EARTH;
         mAccelLast = SensorManager.GRAVITY_EARTH;
-        try {
+
             mSensorEventManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
             mSensor = mSensorEventManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
             mSensorEventManager.registerListener(ShakeSensorService.this, mSensor,

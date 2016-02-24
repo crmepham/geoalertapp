@@ -122,6 +122,11 @@ public class LoginActivity extends AppCompatActivity {
             if(result == 200) {
                 SharedPreferencesHelper.setBooleanProperty(getApplicationContext(), "loggedIn", true);
                 SharedPreferencesHelper.setStringProperty(getApplication(), "username", username);
+
+                if(SharedPreferencesHelper.getStringProperty(getApplicationContext(), "sensitivity").equals("")) {
+                    SharedPreferencesHelper.setStringProperty(getApplication(), "sensitivity", "16");
+                }
+
                 if(SharedPreferencesHelper.getStringProperty(getApplicationContext(), "displayProfileMap").equals("Enabled")) {
                     LocationUpdateReceiver.SetAlarm(getApplicationContext(), BaseHelper.INTERVAL_FIFTEEN_MINUTES); // 30 mins approx.
                 }

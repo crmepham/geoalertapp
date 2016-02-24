@@ -130,6 +130,9 @@ public class SettingsActivity extends AppCompatActivity
         });
 
         displayProfileMap = SharedPreferencesHelper.getStringProperty(getApplicationContext(), "displayProfileMap");
+        if(displayProfileMap.equals("")) {
+            displayProfileMap = "Enabled";
+        }
         Button btn = (Button) findViewById(R.id.settingsProfileLocationButton);
         btn.setText(displayProfileMap);
     }

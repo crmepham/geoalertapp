@@ -166,8 +166,8 @@ public class LocationActivity extends AppCompatActivity implements OnMapReadyCal
         LatLng latlng = new LatLng(Double.parseDouble(latitude), Double.parseDouble(longitude));
         marker = mMap.addMarker(new MarkerOptions().position(latlng).title(username));
         marker.setIcon((BitmapDescriptorFactory.fromResource(R.drawable.marker)));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(latlng));
-        mMap.animateCamera(CameraUpdateFactory.zoomTo(zoom), 2000, null);
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latlng, zoom));
+       // mMap.animateCamera(CameraUpdateFactory.zoomTo(zoom), 2000, null);
     }
 
     private void updateLastUpdated() {
