@@ -14,7 +14,7 @@ A personal safety alert app that notifies friends when you are in trouble.
 Before you go out for the evening, or before your walk home, you can activate the GeoAlert sensor. Then if you are ever in trouble you can simply shake your phone and the alert will be activated, this will update your status and send a notification to all of your contacts. Your contacts can then see exactly where you activated the signal, and continue to track your location.</p>
 <hr>
 <h3>Pre-requisites</h3>
-Android OS version 4.2+
+Android OS version 4.4+
 <hr>
 <h3>Features</h3>
 1) View your contacts precise location (update every 15 minutes).<br>
