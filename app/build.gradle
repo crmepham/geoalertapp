@@ -14,8 +14,8 @@ android {
     useLibrary 'org.apache.http.legacy'
     defaultConfig {
         applicationId "crm.geoalertapp"
-        minSdkVersion 19
-        targetSdkVersion 19
+        minSdkVersion 21
+        targetSdkVersion 21
         versionCode 7
         versionName "1.06"
         multiDexEnabled true

@@ -56,10 +56,6 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void loginButton(View view) {
-
-        progress = ProgressDialog.show(LoginActivity.this, "", "Logging in. Please wait...", true);
-        progress.show();
-
         EditText tv = (EditText) findViewById(R.id.inputUsername);
         username = tv.getText().toString();
         tv = (EditText) findViewById(R.id.inputPassword);
@@ -75,9 +71,9 @@ public class LoginActivity extends AppCompatActivity {
             toast = Toast.makeText(getApplicationContext(), errors, Toast.LENGTH_LONG);
             toast.show();
         }else if(ValidationHelper.isInternetConnected(getApplicationContext())){
-            String encryptedPassword = StringEncrypter.encrypt(password);
+
             LoginTask loginTask = new LoginTask();
-            loginTask.execute(username, encryptedPassword);
+            loginTask.execute(username, password);
         }else{
             progress.dismiss();
             toast = Toast.makeText(getApplicationContext(), "", Toast.LENGTH_LONG);
@@ -91,13 +87,13 @@ public class LoginActivity extends AppCompatActivity {
     private class LoginTask extends AsyncTask<String, Integer, Integer>{
 
         protected Integer doInBackground(String... params) {
-
+            String encryptedPassword = StringEncrypter.encrypt(params[1]);
             Integer responseCode = 0;
             // attempt login via post request
             try {
                 MultivaluedMap map = new MultivaluedMapImpl();
                 map.add("username", params[0]);
-                map.add("password", params[1]);
+                map.add("password", encryptedPassword);
 
                 RestClient tc = new RestClient(map);
                 responseCode = tc.postForResponseCode("user/authenticate");
@@ -109,6 +105,8 @@ public class LoginActivity extends AppCompatActivity {
 
         @Override
         protected void onPreExecute() {
+            progress = ProgressDialog.show(LoginActivity.this, "", "Logging in. Please wait...", true);
+            progress.show();
             super.onPreExecute();
         }
 

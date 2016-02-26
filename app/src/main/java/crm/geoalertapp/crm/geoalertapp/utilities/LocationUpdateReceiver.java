@@ -21,9 +21,10 @@ public class LocationUpdateReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         if(BaseHelper.isInternetConnected(context)) {
             LocationHelper locationHelper = new LocationHelper(context);
-            locationHelper.updateLocation();
-            UpdateLocationTask UpdateLocationTask = new UpdateLocationTask();
-            UpdateLocationTask.execute(SharedPreferencesHelper.getStringProperty(context, "username"), locationHelper.getLatitude(), locationHelper.getLongitude());
+            if(locationHelper.updateLocation()) {
+                UpdateLocationTask UpdateLocationTask = new UpdateLocationTask();
+                UpdateLocationTask.execute(SharedPreferencesHelper.getStringProperty(context, "username"), locationHelper.getLatitude(), locationHelper.getLongitude());
+            }
         }
 
     }

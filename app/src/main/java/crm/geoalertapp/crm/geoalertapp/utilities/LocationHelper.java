@@ -31,12 +31,16 @@ public class LocationHelper extends BaseHelper {
         return (lm.isProviderEnabled(LocationManager.GPS_PROVIDER)) ? true : lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
     }
 
-    public void updateLocation() {
+    public boolean updateLocation() {
         if(isLocationAvailable()) {
             location = getLocation();
-            latitude = String.valueOf(location.getLatitude());
-            longitude = String.valueOf(location.getLongitude());
+            latitude = (location != null) ? String.valueOf(location.getLatitude()) : "0";
+            longitude = (location != null) ? String.valueOf(location.getLongitude()) : "0";
+            if(location != null) {
+                return true;
+            }
         }
+        return false;
     }
 
     public static String getAddress(Context context, String latitude, String longitude) {
@@ -54,9 +58,16 @@ public class LocationHelper extends BaseHelper {
     }
 
     private Location getLocation() {
-        Location location = lm.getLastKnownLocation(lm.GPS_PROVIDER);
-        if(location == null){
-            location = lm.getLastKnownLocation(lm.NETWORK_PROVIDER);
+        try {
+            location = lm.getLastKnownLocation(lm.GPS_PROVIDER);
+            if (location == null) {
+                location = lm.getLastKnownLocation(lm.NETWORK_PROVIDER);
+            }
+            //location = new Location("Defaut address");
+            //location.setLatitude(0L);
+            //location.setLongitude(0L);
+        } catch (SecurityException e) {
+            Log.d("", e.getMessage());
         }
         return location;
     }

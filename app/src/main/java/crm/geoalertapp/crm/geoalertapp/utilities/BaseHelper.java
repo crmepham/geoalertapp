@@ -39,8 +39,12 @@ public class BaseHelper {
     public static final Long INTERVAL_ONE_MINUTE = 60000L;
     public static String getContactNumber(Context context) {
         String number = "";
-        TelephonyManager mngr = (TelephonyManager)context.getSystemService(Context.TELEPHONY_SERVICE);
-        number = mngr.getLine1Number();
+        try {
+            TelephonyManager mngr = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+            number = mngr.getLine1Number();
+        } catch(Exception e) {
+            Log.d("", e.getMessage());
+        }
         return number;
     }
 

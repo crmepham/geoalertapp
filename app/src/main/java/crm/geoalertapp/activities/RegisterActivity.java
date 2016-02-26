@@ -80,16 +80,13 @@ public class RegisterActivity extends AppCompatActivity {
             toast = Toast.makeText(getApplicationContext(), errors, Toast.LENGTH_LONG);
             toast.show();
         }else{
-            progress = ProgressDialog.show(RegisterActivity.this, "",
-                    "Registering. Please wait...", true);
-            progress.show();
+
             String contactNumber = BaseHelper.getContactNumber(getApplicationContext());
             String lang = BaseHelper.getLanguage();
-            String encryptedSecurityAnswer = StringEncrypter.encrypt(securityAnswer);
-            String encryptedPassword = StringEncrypter.encrypt(password);
+
 
             RegisterTask registerTask = new RegisterTask();
-            registerTask.execute(username, encryptedPassword, contactNumber, email, lang, securityQuestion, encryptedSecurityAnswer);
+            registerTask.execute(username, password, contactNumber, email, lang, securityQuestion, securityAnswer);
         }
     }
 
@@ -97,16 +94,19 @@ public class RegisterActivity extends AppCompatActivity {
 
         protected Integer doInBackground(String... params) {
 
+            String encryptedSecurityAnswer = StringEncrypter.encrypt(params[6]);
+            String encryptedPassword = StringEncrypter.encrypt(params[1]);
+
             Integer responseCode = 0;
             try {
                 MultivaluedMap map = new MultivaluedMapImpl();
                 map.add("username", params[0]);
-                map.add("password", params[1]);
+                map.add("password", encryptedPassword);
                 map.add("contactNumber", params[2]);
                 map.add("email", params[3]);
                 map.add("lang", params[4]);
                 map.add("securityQuestion", params[5]);
-                map.add("securityAnswer", params[6]);
+                map.add("securityAnswer", encryptedSecurityAnswer);
 
                 RestClient tc = new RestClient(map);
                 responseCode = tc.postForResponseCode("user/register");
@@ -118,11 +118,9 @@ public class RegisterActivity extends AppCompatActivity {
 
         @Override
         protected void onPreExecute() {
+            progress = ProgressDialog.show(RegisterActivity.this, "","Registering. Please wait...", true);
+            progress.show();
             super.onPreExecute();
-            SharedPreferences sharedPreferences = getSharedPreferences("prefs", MODE_PRIVATE);;
-            if(toast == null) {
-                toast = Toast.makeText(getApplicationContext(), "", Toast.LENGTH_SHORT);
-            }
         }
 
         @Override
