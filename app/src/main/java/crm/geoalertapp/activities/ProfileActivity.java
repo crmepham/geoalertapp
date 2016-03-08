@@ -107,8 +107,7 @@ public class ProfileActivity extends AppCompatActivity
             btn.setVisibility(View.VISIBLE);
             btn = (Button) findViewById(R.id.profileLocationButton);
             btn.setVisibility(View.INVISIBLE);
-            toast = Toast.makeText(getApplicationContext(), "", Toast.LENGTH_SHORT);
-            toast.setText("Could not retrieve profile data. No internet connection.");
+            toast = Toast.makeText(getApplicationContext(), "Could not retrieve profile data. No internet connection.", Toast.LENGTH_SHORT);
             toast.show();
         }
     }
@@ -400,7 +399,7 @@ public class ProfileActivity extends AppCompatActivity
                         t = (TextView)findViewById(R.id.profile_name);
                         t.setText(profile.getString("fullName"));
                         t = (TextView)findViewById(R.id.profile_dob);
-                        t.setText(BaseHelper.formatDateString("yyyy-mm-dd hh:mm:ss", "d MMM, yyyy", profile.getString("dob")));
+                        t.setText(BaseHelper.formatDateString("yyyy-MM-dd hh:mm:ss", "d MMM, yyyy", profile.getString("dob")));
                         t = (TextView)findViewById(R.id.profileGender);
                         t.setText(profile.getString("gender"));
                         t = (TextView)findViewById(R.id.profileBloodType);

@@ -67,7 +67,7 @@ public class PendingContactRequestsActivity extends AppCompatActivity {
                 JSONObject object = contactRequests.getJSONObject(i);
 
                 final String username = object.getString("username");
-                final String fullName = (object.isNull("fullName")) ? username : object.getString("fullName");
+                final String fullName = (object.isNull("fullName") || object.getString("fullName").trim().equals("")) ? username : object.getString("fullName");
                 final int userId = object.getInt("userId");
 
                 // create wrapper

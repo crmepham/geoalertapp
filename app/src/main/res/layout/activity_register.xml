@@ -22,7 +22,7 @@
         android:layout_marginTop="50dp"
         android:layout_marginBottom="20dp"
         android:layout_gravity="center"
-        android:src="@drawable/icon_light"/>
+        android:src="@drawable/icon_dark"/>
 
     <EditText
         android:layout_width="@dimen/centerWidth"
@@ -31,8 +31,10 @@
         android:inputType="textPersonName"
         android:backgroundTint="@color/inputColour"
         android:hint="username"
-        android:textColorHint="@color/inputColour"
-        android:textColor="@color/inputColour"
+        android:textColorHint="@android:color/white"
+        android:textColor="@android:color/white"
+        android:textSize="15dp"
+        android:typeface="monospace"
         android:ems="10"
         android:id="@+id/registerUsername"
         android:layout_gravity="center_horizontal" />
@@ -44,8 +46,10 @@
     android:inputType="textPassword"
     android:backgroundTint="@color/inputColour"
     android:hint="password"
-    android:textColorHint="@color/inputColour"
-        android:textColor="@color/inputColour"
+    android:textColorHint="@android:color/white"
+        android:textColor="@android:color/white"
+        android:textSize="15dp"
+        android:typeface="monospace"
     android:ems="10"
     android:id="@+id/registerPassword"
     android:layout_gravity="center_horizontal" />
@@ -57,8 +61,10 @@
         android:inputType="textPassword"
         android:backgroundTint="@color/inputColour"
         android:hint="confirm password"
-        android:textColorHint="@color/inputColour"
-        android:textColor="@color/inputColour"
+        android:textColorHint="@android:color/white"
+        android:textColor="@android:color/white"
+        android:textSize="15dp"
+        android:typeface="monospace"
         android:ems="10"
         android:id="@+id/registerPasswordConfirm"
         android:layout_gravity="center_horizontal" />
@@ -70,8 +76,10 @@
         android:inputType="textEmailAddress"
         android:backgroundTint="@color/inputColour"
         android:hint="email"
-        android:textColorHint="@color/inputColour"
-        android:textColor="@color/inputColour"
+        android:textColorHint="@android:color/white"
+        android:textColor="@android:color/white"
+        android:textSize="15dp"
+        android:typeface="monospace"
         android:ems="10"
         android:id="@+id/registerEmail"
         android:layout_gravity="center_horizontal" />
@@ -82,8 +90,10 @@
         android:inputType="textEmailAddress"
         android:backgroundTint="@color/inputColour"
         android:hint="confirm email"
-        android:textColorHint="@color/inputColour"
-        android:textColor="@color/inputColour"
+        android:textColorHint="@android:color/white"
+        android:textColor="@android:color/white"
+        android:textSize="15dp"
+        android:typeface="monospace"
         android:ems="10"
         android:id="@+id/registerEmailConfirm"
         android:layout_gravity="center_horizontal" />
@@ -96,9 +106,10 @@
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textStyle="italic"
             android:text="Select a security question"
+            android:typeface="monospace"
             android:ems="10"
-            android:textColor="@color/inputColour"
-            android:textSize="@dimen/smallLink"
+            android:textColor="@android:color/white"
+            android:textSize="13dp"
             android:layout_gravity="center_horizontal"/>
 
         <Spinner
@@ -108,8 +119,9 @@
             android:prompt="@string/app_name"
             android:gravity="center"
             android:entries="@array/security_questions"
+            android:background="@color/inputColour"
             android:ems="10"
-            android:backgroundTint="@color/inputColour"
+            android:backgroundTint="@android:color/white"
             android:layout_gravity="center_horizontal"/>
 
         <EditText
@@ -119,8 +131,10 @@
             android:inputType="text"
             android:backgroundTint="@color/inputColour"
             android:hint="answer"
-            android:textColorHint="@color/inputColour"
-            android:textColor="@color/inputColour"
+            android:textColorHint="@android:color/white"
+            android:textColor="@android:color/white"
+            android:textSize="15dp"
+            android:typeface="monospace"
             android:ems="10"
             android:id="@+id/securityAnswer"
             android:layout_gravity="center_horizontal" />
@@ -130,7 +144,7 @@
         android:layout_width="@dimen/centerButtonWidth"
         android:layout_height="@dimen/centerButtonHeight"
         android:background="@android:drawable/dialog_holo_dark_frame"
-        android:textColor="@color/inputColour"
+        android:textColor="@android:color/white"
         android:text="Register"
         android:id="@+id/registerButton"
         android:layout_gravity="center_horizontal"
@@ -143,7 +157,7 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="Login"
-        android:textColor="@color/inputColour"
+        android:textColor="@android:color/white"
         android:textSize="@dimen/smallLink"
         android:id="@+id/loginLink"
         android:layout_gravity="center_horizontal"

@@ -126,7 +126,7 @@ public class LoginActivity extends AppCompatActivity {
                 }
 
                 if(SharedPreferencesHelper.getStringProperty(getApplicationContext(), "displayProfileMap").equals("Enabled")) {
-                    LocationUpdateReceiver.SetAlarm(getApplicationContext(), BaseHelper.INTERVAL_FIFTEEN_MINUTES); // 30 mins approx.
+                    LocationUpdateReceiver.SetAlarm(getApplicationContext(), BaseHelper.INTERVAL_THIRTY_MINUTES); // 30 mins approx.
                 }
 
                 Intent intent = new Intent(LoginActivity.this, ContactsActivity.class);

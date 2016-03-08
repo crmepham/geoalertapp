@@ -142,15 +142,14 @@ public class RegisterActivity extends AppCompatActivity {
 
                 if(SharedPreferencesHelper.getStringProperty(getApplicationContext(), "displayProfileMap") == null) {
                     SharedPreferencesHelper.setStringProperty(getApplicationContext(), "displayProfileMap", "Enabled");
-                    LocationUpdateReceiver.SetAlarm(getApplicationContext(), BaseHelper.INTERVAL_FIFTEEN_MINUTES); // 30 mins approx.
+                    LocationUpdateReceiver.SetAlarm(getApplicationContext(), BaseHelper.INTERVAL_THIRTY_MINUTES); // 30 mins approx.
                 }
 
                 Intent intent = new Intent(RegisterActivity.this, ProfileActivity.class);
                 intent.putExtra("username", username);
                 startActivity(intent);
             }else{
-                toast.setText("Unable to register, that user already exists.");
-                toast.show();
+                Toast.makeText(getApplicationContext(), "User already exists", Toast.LENGTH_SHORT).show();
             }
 
         }

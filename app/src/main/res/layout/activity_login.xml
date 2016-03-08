@@ -15,7 +15,7 @@
         android:layout_marginTop="50dp"
         android:layout_marginBottom="20dp"
         android:layout_gravity="center"
-        android:src="@drawable/icon_light"/>
+        android:src="@drawable/icon_dark"/>
 
     <EditText
         android:layout_width="@dimen/centerWidth"
@@ -24,8 +24,10 @@
         android:inputType="textPersonName"
         android:backgroundTint="@color/inputColour"
         android:hint="username"
-        android:textColorHint="@color/inputColour"
-        android:textColor="@color/inputColour"
+        android:textColorHint="@android:color/white"
+        android:textColor="@android:color/white"
+        android:typeface="monospace"
+        android:textSize="15dp"
         android:ems="10"
         android:id="@+id/inputUsername"
         android:layout_gravity="center_horizontal" />
@@ -36,9 +38,11 @@
         android:layout_marginTop="@dimen/vetical_margin_small"
         android:inputType="textPassword"
         android:backgroundTint="@color/inputColour"
-        android:textColor="@color/inputColour"
+        android:textColor="@android:color/white"
         android:hint="password"
-        android:textColorHint="@color/inputColour"
+        android:textSize="15dp"
+        android:typeface="serif"
+        android:textColorHint="@android:color/white"
         android:ems="10"
         android:id="@+id/inputPassword"
         android:layout_gravity="center_horizontal" />
@@ -48,7 +52,7 @@
         android:layout_width="@dimen/centerButtonWidth"
         android:layout_height="@dimen/centerButtonHeight"
         android:background="@android:drawable/dialog_holo_dark_frame"
-        android:textColor="@color/inputColour"
+        android:textColor="@android:color/white"
         android:text="Login"
         android:id="@+id/loginButton"
         android:layout_gravity="center_horizontal"
@@ -60,7 +64,7 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="Register an account"
-        android:textColor="@color/inputColour"
+        android:textColor="@android:color/white"
         android:textSize="@dimen/smallLink"
         android:id="@+id/ResisterAccountLink"
         android:layout_gravity="center_horizontal"
@@ -72,7 +76,7 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="Forgot password"
-        android:textColor="@color/inputColour"
+        android:textColor="@android:color/white"
         android:textSize="@dimen/smallLink"
         android:id="@+id/forgotPasswordLink"
         android:layout_gravity="center_horizontal"

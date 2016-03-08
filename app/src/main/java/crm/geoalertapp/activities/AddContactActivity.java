@@ -46,11 +46,7 @@ public class AddContactActivity extends AppCompatActivity {
             AddContactTask addContactTask = new AddContactTask();
             addContactTask.execute(contactUsername);
         }else{
-            if(toast == null) {
-                toast = Toast.makeText(getApplicationContext(), "", Toast.LENGTH_SHORT);
-            }
-            toast.setText("Cannot add yourself.");
-            toast.show();
+            Toast.makeText(getApplicationContext(), "Cannot add yourself.", Toast.LENGTH_SHORT).show();
         }
 
 

@@ -35,6 +35,7 @@ import java.util.Locale;
  * Created by crm on 22/12/2015.
  */
 public class BaseHelper {
+    public static final Long INTERVAL_THIRTY_MINUTES = 1800000L;
     public static final Long INTERVAL_FIFTEEN_MINUTES = 90000L;
     public static final Long INTERVAL_ONE_MINUTE = 60000L;
     public static String getContactNumber(Context context) {

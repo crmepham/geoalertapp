@@ -13,6 +13,13 @@
         <item name="windowNoTitle">true</item>
     </style>
 
+    <style name="PickerColor">
+        <item name="android:colorAccent">@android:color/white</item>
+        <item name="android:calendarTextColor">@android:color/white</item>
+        <item name="android:dayOfWeekBackground">@android:color/white</item>
+        <item name="android:yearListSelectorColor">@android:color/white</item>
+    </style>
+
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
@@ -28,6 +35,7 @@
     </string-array>
 
     <string-array name="edit_profile_blood_type">
+        <item>Unknown</item>
         <item>A+</item>
         <item>A-</item>
         <item>B+</item>

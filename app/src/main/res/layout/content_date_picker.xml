@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/loginBackground"
+    android:padding="10dp"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="crm.geoalertapp.activities.DatePickerActivity"
     tools:showIn="@layout/activity_date_picker">
@@ -14,7 +15,8 @@
     <DatePicker
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/datePicker" />
+        android:id="@+id/datePicker"
+        android:background="@android:color/white"/>
 
     <Button
         android:layout_width="match_parent"

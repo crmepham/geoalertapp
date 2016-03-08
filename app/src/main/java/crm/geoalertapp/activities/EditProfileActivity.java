@@ -62,7 +62,7 @@ public class EditProfileActivity extends AppCompatActivity {
             t.setText(obj.getString("fullName"));
             Button btn = (Button) findViewById(R.id.pickDateButton);
             btn.setText( (obj.getString("dob").equals(" ") || obj.getString("dob").equals("1970-01-01 01:01:01"))? "Pick a date":
-            BaseHelper.formatDateString("yyy-mm-dd hh:mm:ss", "d MMM, yyyy", obj.getString("dob")));
+            BaseHelper.formatDateString("yyy-MM-dd hh:mm:ss", "d MMM, yyyy", obj.getString("dob")));
             t = (EditText) findViewById(R.id.editProfileHeight);
             t.setText(obj.getString("height"));
             t = (EditText) findViewById(R.id.editProfileWeight);
@@ -162,7 +162,7 @@ public class EditProfileActivity extends AppCompatActivity {
                 if (b != null) {
                     dob = b.getString("date");
                     Button btn = (Button) findViewById(R.id.pickDateButton);
-                    btn.setText(BaseHelper.formatDateString("yyy-mm-dd hh:mm:ss", "d MMM, yyyy", dob));
+                    btn.setText(BaseHelper.formatDateString("yyyy-MM-dd hh:mm:ss", "d MMM, yyyy", dob));
 
                 }
             } else if (resultCode == 0) {

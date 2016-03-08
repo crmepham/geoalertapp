@@ -12,21 +12,31 @@ import com.sun.jersey.core.util.MultivaluedMapImpl;
 
 import javax.ws.rs.core.MultivaluedMap;
 
+import static java.lang.Thread.sleep;
+
 /**
  * Created by crm on 17/02/2016.
  */
 public class LocationUpdateReceiver extends BroadcastReceiver {
 
+    private static boolean waiting = false;
+
     @Override
     public void onReceive(Context context, Intent intent) {
-        if(BaseHelper.isInternetConnected(context)) {
-            LocationHelper locationHelper = new LocationHelper(context);
-            if(locationHelper.updateLocation()) {
-                UpdateLocationTask UpdateLocationTask = new UpdateLocationTask();
-                UpdateLocationTask.execute(SharedPreferencesHelper.getStringProperty(context, "username"), locationHelper.getLatitude(), locationHelper.getLongitude());
+        if(!waiting) {
+            waiting = true;
+            while (true) {
+                if (BaseHelper.isInternetConnected(context)) {
+                    LocationHelper locationHelper = new LocationHelper(context);
+                    if (locationHelper.updateLocation()) {
+                        UpdateLocationTask UpdateLocationTask = new UpdateLocationTask();
+                        UpdateLocationTask.execute(SharedPreferencesHelper.getStringProperty(context, "username"), locationHelper.getLatitude(), locationHelper.getLongitude());
+                    }
+                    waiting = false;
+                    break;
+                }
             }
         }
-
     }
 
     public static void SetAlarm(Context context, Long time){
