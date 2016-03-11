@@ -62,18 +62,34 @@ public class ActivationActivity extends AppCompatActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
+
+
+        shakeSensorService = new ShakeSensorService();
+        updateStatus = true;
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        updateRemoteStatus();
+        setUpButton();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        TextView t = (TextView)findViewById(R.id.sensorButton);
+        t.setVisibility(View.INVISIBLE);
+    }
+
+    private void setUpButton() {
+
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         View headerLayout = navigationView.getHeaderView(0);
         TextView tv = (TextView) headerLayout.findViewById(R.id.nav_header_username);
         tv.setText(SharedPreferencesHelper.getStringProperty(getApplicationContext(), "username"));
-
-        shakeSensorService = new ShakeSensorService();
-        updateStatus = true;
-        setUpButton();
-    }
-
-    private void setUpButton() {
 
         // get from DB
         boolean goReset = getIntent().getBooleanExtra("goReset", false);
@@ -122,14 +138,11 @@ public class ActivationActivity extends AppCompatActivity
                 t.setText("DEACTIVATE");
                 t = (TextView)findViewById(R.id.sensorNotification);
                 t.setVisibility(View.INVISIBLE);
-                // update remote status
-                // and local ??
                 SharedPreferencesHelper.setStringProperty(getApplicationContext(), "status", "Active");
                 updateRemoteStatus();
 
                 Toast.makeText(getApplicationContext(), "Sensor activated. Status changed to Active.", Toast.LENGTH_SHORT).show();
                 SharedPreferencesHelper.setStringProperty(getApplicationContext(), "sensor", "DEACTIVATE");
-                //ShakeSensorService.SetAlarm(getApplicationContext());
 
                 break;
             case "DEACTIVATE":
@@ -140,9 +153,6 @@ public class ActivationActivity extends AppCompatActivity
                 t = (TextView)findViewById(R.id.sensorNotification);
                 t.setVisibility(View.INVISIBLE);
                 SharedPreferencesHelper.setStringProperty(getApplicationContext(), "sensor", "ACTIVATE");
-
-                // update remote status
-                // and local ??
                 SharedPreferencesHelper.setStringProperty(getApplicationContext(), "status", "Inactive");
                 updateRemoteStatus();
 

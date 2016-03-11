@@ -42,6 +42,8 @@ import crm.geoalertapp.crm.geoalertapp.utilities.ValidationHelper;
 public class ProfileActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    //private static boolean loaded = false;
+
     ProgressDialog progress;
     Toast toast;
     Intent intent;
@@ -59,7 +61,6 @@ public class ProfileActivity extends AppCompatActivity
         window.setStatusBarColor(this.getResources().getColor(R.color.colorPrimary));
 
         intent = getIntent();
-        load();
 
 
 
@@ -72,28 +73,37 @@ public class ProfileActivity extends AppCompatActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
+
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        username = intent.getStringExtra("username");
+        setIntent(intent);
+    }
+
+    private void load(){
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         View headerLayout = navigationView.getHeaderView(0);
         TextView tv = (TextView) headerLayout.findViewById(R.id.nav_header_username);
         tv.setText(SharedPreferencesHelper.getStringProperty(getApplicationContext(), "username"));
 
-
-
-    }
-
-    private void load(){
         if(ValidationHelper.isInternetConnected(getApplicationContext())) {
             LinearLayout l = (LinearLayout) findViewById(R.id.profile_container);
             l.setVisibility(View.VISIBLE);
-            username = intent.getStringExtra("username");
+            if(username == null) {
+                username = intent.getStringExtra("username");
+            }
+            //username = intent.getStringExtra("username");
 
-            /*String displayLocation = SharedPreferencesHelper.getStringProperty(getApplicationContext(), "displayProfileMap");
+            String displayLocation = SharedPreferencesHelper.getStringProperty(getApplicationContext(), "displayProfileMap");
 
             if(displayLocation.equals("Enabled")) {
                 Button btn = (Button) findViewById(R.id.profileLocationButton);
                 btn.setVisibility(View.VISIBLE);
-            }*/
+            }
 
             if(username != null){
                 ProfilePicturetask profilePicturetask = new ProfilePicturetask();
@@ -107,6 +117,8 @@ public class ProfileActivity extends AppCompatActivity
             btn.setVisibility(View.VISIBLE);
             btn = (Button) findViewById(R.id.profileLocationButton);
             btn.setVisibility(View.INVISIBLE);
+            btn = (Button) findViewById(R.id.profileEditButton);
+            btn.setVisibility(View.INVISIBLE);
             toast = Toast.makeText(getApplicationContext(), "Could not retrieve profile data. No internet connection.", Toast.LENGTH_SHORT);
             toast.show();
         }
@@ -115,7 +127,9 @@ public class ProfileActivity extends AppCompatActivity
     @Override
     public void onResume()
     {
+
         super.onResume();
+            load();
     }
 
     @Override
@@ -218,8 +232,8 @@ public class ProfileActivity extends AppCompatActivity
                 Bundle b = data.getExtras();
                 if (b != null) {
                     if(BaseHelper.isInternetConnected(this)) {
-                        ProfileTask profileTask = new ProfileTask((RelativeLayout)findViewById(R.id.profileTopButtonsWrapper));
-                        profileTask.execute(intent.getStringExtra("username"));
+                        /*ProfileTask profileTask = new ProfileTask((RelativeLayout)findViewById(R.id.profileTopButtonsWrapper));
+                        profileTask.execute(intent.getStringExtra("username"));*/
                     }else{
                         Button btn = (Button) findViewById(R.id.profileEditButton);
                         btn.setVisibility(View.VISIBLE);
@@ -239,8 +253,8 @@ public class ProfileActivity extends AppCompatActivity
                 Bundle b = data.getExtras();
                 if (b != null) {
                     if(BaseHelper.isInternetConnected(this)) {
-                        ProfilePicturetask profilePicturetask = new ProfilePicturetask();
-                        profilePicturetask.execute(intent.getStringExtra("username"));
+                        /*ProfilePicturetask profilePicturetask = new ProfilePicturetask();
+                        profilePicturetask.execute(intent.getStringExtra("username"));*/
                     }else{
                         if(toast == null) {
                             toast = Toast.makeText(getApplicationContext(), "", Toast.LENGTH_SHORT);
@@ -291,9 +305,11 @@ public class ProfileActivity extends AppCompatActivity
 
                 try {
                    Bitmap bmp = BitmapFactory.decodeByteArray(result, 0, result.length);
+                    ImageView image = (ImageView) findViewById(R.id.profile_img);
                     if(bmp != null){
-                        ImageView image = (ImageView) findViewById(R.id.profile_img);
                         image.setImageBitmap(bmp);
+                    }else{
+                        image.setImageResource(R.drawable.male_silhouette);
                     }
                 } catch(Exception e) {
                     Log.e("", e.getMessage());

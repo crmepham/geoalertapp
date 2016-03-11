@@ -80,18 +80,28 @@ public class ContactsActivity extends AppCompatActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
 
+    }
 
-        View headerLayout = navigationView.getHeaderView(0);
-        TextView tv = (TextView) headerLayout.findViewById(R.id.nav_header_username);
-        tv.setText(SharedPreferencesHelper.getStringProperty(getApplicationContext(), "username"));
-
+    @Override
+    protected void onResume() {
+        super.onResume();
+        removeContacts();
         load();
     }
 
+    private void removeContacts() {
+        LinearLayout l = (LinearLayout) findViewById(R.id.contacts_container);
+        l.removeAllViews();
+
+    }
+
     private void load(){
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+        View headerLayout = navigationView.getHeaderView(0);
+        TextView tv = (TextView) headerLayout.findViewById(R.id.nav_header_username);
+        tv.setText(SharedPreferencesHelper.getStringProperty(getApplicationContext(), "username"));
 
         if(!BaseHelper.isServiceRunning(RetreiveNotificationsService.class, this)) {
             Intent myIntent = new Intent(this, RetreiveNotificationsService.class);
@@ -297,20 +307,6 @@ public class ContactsActivity extends AppCompatActivity
                         textWrapper.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-
-                                // when this linearlayout is clicked
-                                // get the username of this childs textview with an id of R.id.contactUsername
-                                // start new intent and pass the username
-                                /*String name = null;
-                                for (int i = 0; i < ((ViewGroup) v).getChildCount(); ++i) {
-                                    View nextChild = ((ViewGroup) v).getChildAt(i);
-                                    if (nextChild.getId() == R.id.contactUsername) {
-                                        TextView text = (TextView) nextChild;
-                                        name = text.getText().toString();
-                                    }
-                                }*/
-
-                                //TextView tv_id = (TextView) ((View) v.getParent()).findViewById(R.id.contact);
                                 Intent intent = new Intent(ContactsActivity.this, ProfileActivity.class);
                                 intent.putExtra("username", username);
                                 startActivity(intent);
@@ -374,9 +370,6 @@ public class ContactsActivity extends AppCompatActivity
                         deleteButton.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-
-
-                                // delete this contact
                                 DeleteContactTask DeleteContactTask = new DeleteContactTask(wrapper);
                                 DeleteContactTask.execute(contactId);
                             }
@@ -429,18 +422,23 @@ public class ContactsActivity extends AppCompatActivity
 
         protected void onPostExecute(String result) {
             progress.dismiss();
+            Button button = (Button) findViewById(R.id.pendingContactsButton);
             if(result != null) {
                 try {
                     contactRequests = new JSONArray(result);
                     LinearLayout l = (LinearLayout) findViewById(R.id.contacts_container);
 
                     if(contactRequests.length() > 0){
-                        Button button = (Button) findViewById(R.id.pendingContactsButton);
+
                         button.setText((contactRequests.length()> 1)? contactRequests.length() + " pending contact requests": contactRequests.length() + " pending contact request");
                         button.setVisibility(View.VISIBLE);
+                    }else{
+                        button.setVisibility(View.GONE);
                     }
 
-                }catch(JSONException e){
+                }catch(Exception e){
+                    button.setVisibility(View.GONE);
+
                     Log.e("", e.getMessage());
                 }
 

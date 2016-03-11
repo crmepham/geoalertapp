@@ -12,7 +12,7 @@ FATAL EXCEPTION: main
                                                                      at com.android.internal.os.ZygoteInit$MethodAndArgsCaller.run(ZygoteInit.java:899)
                                                                      at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:694)
                                                                   Caused by: java.lang.NullPointerException: Attempt to invoke virtual method 'double android.location.Location.getLatitude()' on a null object reference
-                                                                     at crm.geoalertapp.crm.geoalertapp.utilities.LocationHelper.updateLocation(LocationHelper.java:37)
+                                                                     at updateLatLong(LocationHelper.java:37)
                                                                      at crm.geoalertapp.crm.geoalertapp.utilities.LocationHelper.<init>(LocationHelper.java:27)
                                                                      at crm.geoalertapp.crm.geoalertapp.utilities.LocationUpdateReceiver.onReceive(LocationUpdateReceiver.java:23)
                                                                      at android.app.ActivityThread.handleReceiver(ActivityThread.java:2579)

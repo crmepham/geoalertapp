@@ -22,16 +22,11 @@ public class LocationUpdateReceiver extends BroadcastReceiver {
     private static boolean waiting = false;
 
     @Override
-    public void onReceive(Context context, Intent intent) {
-        if(!waiting) {
+    public void onReceive(Context context, Intent intent) {if(!waiting) {
             waiting = true;
             while (true) {
                 if (BaseHelper.isInternetConnected(context)) {
-                    LocationHelper locationHelper = new LocationHelper(context);
-                    if (locationHelper.updateLocation()) {
-                        UpdateLocationTask UpdateLocationTask = new UpdateLocationTask();
-                        UpdateLocationTask.execute(SharedPreferencesHelper.getStringProperty(context, "username"), locationHelper.getLatitude(), locationHelper.getLongitude());
-                    }
+                    new LocationHelper(context);
                     waiting = false;
                     break;
                 }
@@ -53,24 +48,5 @@ public class LocationUpdateReceiver extends BroadcastReceiver {
         alarmManager.cancel(sender);
     }
 
-    private class UpdateLocationTask extends AsyncTask<String, Integer, Integer> {
 
-        protected Integer doInBackground(String... params) {
-
-            Integer responseCode = 0;
-            try {
-                MultivaluedMap map = new MultivaluedMapImpl();
-                map.add("username", params[0]);
-                map.add("latitude", params[1]);
-                map.add("longitude", params[2]);
-
-                RestClient tc = new RestClient(map);
-                responseCode = tc.postForResponseCode("location/update");
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            return responseCode;
-        }
-    }
 }

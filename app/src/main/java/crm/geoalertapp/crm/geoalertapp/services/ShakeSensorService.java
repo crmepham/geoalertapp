@@ -9,7 +9,11 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.os.IBinder;
 import android.os.Vibrator;
 import android.support.annotation.Nullable;
@@ -37,6 +41,8 @@ public class ShakeSensorService extends Service implements SensorEventListener {
     private boolean activated;
     private Context context;
 
+    private LocationManager lm;
+
     // BroadcastReceiver for handling ACTION_SCREEN_OFF.
     BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
@@ -62,7 +68,6 @@ public class ShakeSensorService extends Service implements SensorEventListener {
 
     }
 
-
     @Override
     public void onSensorChanged(SensorEvent event) {
 
@@ -74,25 +79,55 @@ public class ShakeSensorService extends Service implements SensorEventListener {
         float delta = mAccelCurrent - mAccelLast;
         mAccel = mAccel * 0.9f + delta; // perform low-cut filter
 
+        this.lm = (LocationManager)context.getSystemService(Context.LOCATION_SERVICE);
+
         if(sensitivity == null){
             sensitivity = Integer.parseInt(SharedPreferencesHelper.getStringProperty(context, "sensitivity"));
         }
 
         if (mAccel > sensitivity) {
+            activated = false;
             mSensorEventManager.unregisterListener(ShakeSensorService.this);
             SharedPreferencesHelper.setStringProperty(context, "sensor", "RESET");
             SharedPreferencesHelper.setStringProperty(context, "status", "Alert");
             Vibrator v = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
-            v.vibrate(500);
+            v.vibrate(1000);
             Toast.makeText(context, "Device shake registered.", Toast.LENGTH_SHORT).show();
-            AlarmActivator activator = new AlarmActivator(context);
-            activator.start();
+            this.lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, mLocationListener);
+            this.lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, mLocationListener);
             Intent intent = new Intent(context, ActivationActivity.class);
             intent.putExtra("goReset", true);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(intent);
         }
     }
+
+    private final LocationListener mLocationListener = new LocationListener() {
+        @Override
+        public void onLocationChanged(final Location location) {
+
+            if (location != null) {
+                lm.removeUpdates(mLocationListener);
+                AlarmActivator activator = new AlarmActivator(context, String.valueOf(location.getLatitude()), String.valueOf(location.getLongitude()));
+                activator.start();
+            }
+        }
+
+        @Override
+        public void onStatusChanged(String provider, int status, Bundle extras) {
+
+        }
+
+        @Override
+        public void onProviderEnabled(String provider) {
+
+        }
+
+        @Override
+        public void onProviderDisabled(String provider) {
+
+        }
+    };
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {}
@@ -118,13 +153,12 @@ public class ShakeSensorService extends Service implements SensorEventListener {
         mAccel = 0.00f;
         mAccelCurrent = SensorManager.GRAVITY_EARTH;
         mAccelLast = SensorManager.GRAVITY_EARTH;
-
-            mSensorEventManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
-            mSensor = mSensorEventManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-            mSensorEventManager.registerListener(ShakeSensorService.this, mSensor,
-                    SensorManager.SENSOR_DELAY_NORMAL);
-            activated = true;
-            return true;
+        mSensorEventManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
+        mSensor = mSensorEventManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        mSensorEventManager.registerListener(ShakeSensorService.this, mSensor,
+                SensorManager.SENSOR_DELAY_NORMAL);
+        activated = true;
+        return true;
         }catch (Exception e) {
             activated = false;
             throw new Exception(e);

@@ -78,6 +78,10 @@ public class SettingsActivity extends AppCompatActivity
         }
     };
 
+    private void load() {
+
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -96,25 +100,13 @@ public class SettingsActivity extends AppCompatActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-        View headerLayout = navigationView.getHeaderView(0);
-        TextView tv = (TextView) headerLayout.findViewById(R.id.nav_header_username);
-        tv.setText(SharedPreferencesHelper.getStringProperty(getApplicationContext(), "username"));
-
         mAccel = 0.00f;
         mAccelCurrent = SensorManager.GRAVITY_EARTH;
         mAccelLast = SensorManager.GRAVITY_EARTH;
 
-        final TextView t = (TextView) findViewById(R.id.settingsSeekBarValue);
-        seekBar = (SeekBar) findViewById(R.id.settingsSeekBar);
-        try {
-            sensitivity = Integer.parseInt(SharedPreferencesHelper.getStringProperty(getApplicationContext(), "sensitivity"));
-        }catch(Exception e){
-            sensitivity = 15;
-        }
-        seekBar.setProgress(sensitivity);
-        t.setText(sensitivity.toString());
+
+        loadSensitivity();
+
 
 
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -124,6 +116,7 @@ public class SettingsActivity extends AppCompatActivity
             public void onProgressChanged(SeekBar seekBar, int _progress, boolean fromUser) {
                 progress = _progress;
                 sensitivity = _progress;
+                final TextView t = (TextView) findViewById(R.id.settingsSeekBarValue);
                 t.setText(String.valueOf(progress));
             }
 
@@ -142,6 +135,24 @@ public class SettingsActivity extends AppCompatActivity
         }
         Button btn = (Button) findViewById(R.id.settingsProfileLocationButton);
         btn.setText(displayProfileMap);
+    }
+
+    private void loadSensitivity() {
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+        View headerLayout = navigationView.getHeaderView(0);
+        TextView tv = (TextView) headerLayout.findViewById(R.id.nav_header_username);
+        tv.setText(SharedPreferencesHelper.getStringProperty(getApplicationContext(), "username"));
+
+        final TextView t = (TextView) findViewById(R.id.settingsSeekBarValue);
+        seekBar = (SeekBar) findViewById(R.id.settingsSeekBar);
+        try {
+            sensitivity = Integer.parseInt(SharedPreferencesHelper.getStringProperty(getApplicationContext(), "sensitivity"));
+        }catch(Exception e){
+            sensitivity = 15;
+        }
+        seekBar.setProgress(sensitivity);
+        t.setText(sensitivity.toString());
     }
 
     public void testSensitivity(View view) {
@@ -281,7 +292,7 @@ public class SettingsActivity extends AppCompatActivity
     @Override
     protected void onResume() {
         super.onResume();
-
+        loadSensitivity();
     }
 
     @Override

@@ -9,13 +9,11 @@
     tools:context="crm.geoalertapp.activities.ContactsActivity"
     tools:showIn="@layout/app_bar_contacts">
 
+
     <LinearLayout
-        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@android:color/black"
-        android:id="@+id/contacts_container">
-
+        android:orientation="vertical">
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -24,6 +22,13 @@
             android:background="@android:color/holo_green_dark"
             android:visibility="gone"
             android:onClick="pendingRequestsButton"/>
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/black"
+            android:id="@+id/contacts_container">
+        </LinearLayout>
     </LinearLayout>
 
 

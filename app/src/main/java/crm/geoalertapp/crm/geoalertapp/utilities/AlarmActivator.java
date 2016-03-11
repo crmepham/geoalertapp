@@ -1,6 +1,10 @@
 package crm.geoalertapp.crm.geoalertapp.utilities;
 
 import android.content.Context;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+import android.os.Bundle;
 import android.util.Log;
 
 import com.sun.jersey.core.util.MultivaluedMapImpl;
@@ -17,8 +21,15 @@ public class AlarmActivator extends Thread implements Runnable{
     MultivaluedMap map;
     RestClient tc;
     Context context;
+    String latitude;
+    String longitude;
 
-    public AlarmActivator(Context context){
+
+    public AlarmActivator(Context context, String latitude, String longitude){
+
+
+        this.latitude = latitude;
+        this.longitude = longitude;
         this.context = context;
         username = SharedPreferencesHelper.getStringProperty(context, "username");
         status = SharedPreferencesHelper.getStringProperty(context, "status");
@@ -31,9 +42,7 @@ public class AlarmActivator extends Thread implements Runnable{
         while(true) {
             try {
                 if(BaseHelper.isInternetConnected(context)) {
-                    LocationHelper l = new LocationHelper(context);
-
-                    updateLocation(l.getLatitude(), l.getLongitude());
+                    updateLocation();
                     updateRemoteStatus();
                     notifyContacts();
                     break;
@@ -42,11 +51,10 @@ public class AlarmActivator extends Thread implements Runnable{
             } catch (InterruptedException e) {
                 Log.d("", e.getMessage());
             }
-
         }
     }
 
-    private void updateLocation(String latitude, String longitude) {
+    private void updateLocation() {
         try {
 
             map.clear();

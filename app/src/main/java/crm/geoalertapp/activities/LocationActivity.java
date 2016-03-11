@@ -186,9 +186,11 @@ public class LocationActivity extends AppCompatActivity implements OnMapReadyCal
 
     private void updateAddress() {
         String address = LocationHelper.getAddress(getApplicationContext(), latitude, longitude);
+        TextView t = (TextView) findViewById(R.id.locationAddress);
         if(address != null) {
-            TextView t = (TextView) findViewById(R.id.locationAddress);
             t.setText(address);
+        }else{
+            t.setText("No address found for this location");
         }
     }
 

@@ -36,11 +36,10 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         boolean loggedIn = SharedPreferencesHelper.getBooleanProperty(getApplicationContext(), "loggedIn");
         // check loggedIn here
+        setContentView(R.layout.activity_login);
         if(loggedIn){
             Intent intent = new Intent(LoginActivity.this, ContactsActivity.class);
             startActivity(intent);
-        }else{
-            setContentView(R.layout.activity_login);
         }
 
     }
@@ -119,10 +118,12 @@ public class LoginActivity extends AppCompatActivity {
             progress.dismiss();
             if(result == 200) {
                 SharedPreferencesHelper.setBooleanProperty(getApplicationContext(), "loggedIn", true);
-                SharedPreferencesHelper.setStringProperty(getApplication(), "username", username);
+                SharedPreferencesHelper.setStringProperty(getApplicationContext(), "username", username);
+                String test = SharedPreferencesHelper.getStringProperty(getApplicationContext(), "username");
+                String test2 = test;
 
                 if(SharedPreferencesHelper.getStringProperty(getApplicationContext(), "sensitivity").equals("")) {
-                    SharedPreferencesHelper.setStringProperty(getApplication(), "sensitivity", "16");
+                    SharedPreferencesHelper.setStringProperty(getApplicationContext(), "sensitivity", "16");
                 }
 
                 if(SharedPreferencesHelper.getStringProperty(getApplicationContext(), "displayProfileMap").equals("Enabled")) {

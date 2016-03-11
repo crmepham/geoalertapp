@@ -57,6 +57,12 @@ public class PendingContactRequestsActivity extends AppCompatActivity {
             Log.d("", e.getMessage());
         }
 
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         loadList();
     }
 
@@ -180,8 +186,8 @@ public class PendingContactRequestsActivity extends AppCompatActivity {
         protected void onPostExecute(Integer result) {
             progress.dismiss();
             if(result == 201) {
-                wrapper.setVisibility(View.GONE);
                 int count = l.getChildCount();
+                l.removeView(wrapper);
                 if(count == 1){
                     Intent intent = new Intent(PendingContactRequestsActivity.this, ContactsActivity.class);
                     startActivity(intent);
