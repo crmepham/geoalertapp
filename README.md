@@ -1,32 +1,3 @@
-<<<<<<< HEAD
-FATAL EXCEPTION: main
-                                                                 Process: crm.geoalertapp, PID: 13857
-                                                                 java.lang.RuntimeException: Unable to start receiver crm.geoalertapp.crm.geoalertapp.utilities.LocationUpdateReceiver: java.lang.NullPointerException: Attempt to invoke virtual method 'double android.location.Location.getLatitude()' on a null object reference
-                                                                     at android.app.ActivityThread.handleReceiver(ActivityThread.java:2586)
-                                                                     at android.app.ActivityThread.access$1700(ActivityThread.java:144)
-                                                                     at android.app.ActivityThread$H.handleMessage(ActivityThread.java:1355)
-                                                                     at android.os.Handler.dispatchMessage(Handler.java:102)
-                                                                     at android.os.Looper.loop(Looper.java:135)
-                                                                     at android.app.ActivityThread.main(ActivityThread.java:5221)
-                                                                     at java.lang.reflect.Method.invoke(Native Method)
-                                                                     at java.lang.reflect.Method.invoke(Method.java:372)
-                                                                     at com.android.internal.os.ZygoteInit$MethodAndArgsCaller.run(ZygoteInit.java:899)
-                                                                     at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:694)
-                                                                  Caused by: java.lang.NullPointerException: Attempt to invoke virtual method 'double android.location.Location.getLatitude()' on a null object reference
-                                                                     at updateLatLong(LocationHelper.java:37)
-                                                                     at crm.geoalertapp.crm.geoalertapp.utilities.LocationHelper.<init>(LocationHelper.java:27)
-                                                                     at crm.geoalertapp.crm.geoalertapp.utilities.LocationUpdateReceiver.onReceive(LocationUpdateReceiver.java:23)
-                                                                     at android.app.ActivityThread.handleReceiver(ActivityThread.java:2579)
-                                                                     at android.app.ActivityThread.access$1700(ActivityThread.java:144) 
-                                                                     at android.app.ActivityThread$H.handleMessage(ActivityThread.java:1355) 
-                                                                     at android.os.Handler.dispatchMessage(Handler.java:102) 
-                                                                     at android.os.Looper.loop(Looper.java:135) 
-                                                                     at android.app.ActivityThread.main(ActivityThread.java:5221) 
-                                                                     at java.lang.reflect.Method.invoke(Native Method) 
-                                                                     at java.lang.reflect.Method.invoke(Method.java:372) 
-                                                                     at com.android.internal.os.ZygoteInit$MethodAndArgsCaller.run(ZygoteInit.java:899) 
-                                                                     at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:694) 
-=======
 <p align="center">
 <img src="http://i.imgur.com/AFsAEJs.png" alt="Geo alert app">
 </p>
@@ -58,4 +29,3 @@ Android OS version 5.0+
 4) In the settings you can test the shake sensitivity to get it just right.<br>
 5) Add trusted close friends and family via the contacts sections.<br>
 6) Activate the sensor before you leave, and de-activate it when you arrive safely.<br>
->>>>>>> f58dbb8ef2961517d74f0651ba7034cdb45d9d4f
