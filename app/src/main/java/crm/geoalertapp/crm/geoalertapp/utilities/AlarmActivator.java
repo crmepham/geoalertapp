@@ -47,7 +47,7 @@ public class AlarmActivator extends Thread implements Runnable{
                     notifyContacts();
                     break;
                 }
-                sleep(60000);
+                sleep(BaseHelper.INTERVAL_ONE_MINUTE);
             } catch (InterruptedException e) {
                 Log.d("", e.getMessage());
             }

@@ -31,7 +31,7 @@
         android:textColor="@android:color/white"
         android:gravity="center"
         android:textSize="13dp"
-        android:text="Alert notification sent to contacts. If you are safe, please reset your status."
+        android:text="Waiting for data connection..."
         android:visibility="gone"
         android:padding="40dp"
         android:id="@+id/sensorNotification"/>

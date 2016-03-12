@@ -43,6 +43,7 @@ public class ActivationActivity extends AppCompatActivity
     private String sensor;
     private ShakeSensorService shakeSensorService;
     private boolean updateStatus;
+    private Intent newIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,6 +78,13 @@ public class ActivationActivity extends AppCompatActivity
     }
 
     @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+
+        newIntent = intent;
+    }
+
+    @Override
     protected void onPause() {
         super.onPause();
         TextView t = (TextView)findViewById(R.id.sensorButton);
@@ -92,7 +100,7 @@ public class ActivationActivity extends AppCompatActivity
         tv.setText(SharedPreferencesHelper.getStringProperty(getApplicationContext(), "username"));
 
         // get from DB
-        boolean goReset = getIntent().getBooleanExtra("goReset", false);
+        boolean goReset = (newIntent != null) ? newIntent.getBooleanExtra("goReset", false): false;
         if(!goReset) {
             if (BaseHelper.isInternetConnected(getApplicationContext())) {
                 ActivationTask activationTask = new ActivationTask();
@@ -121,8 +129,13 @@ public class ActivationActivity extends AppCompatActivity
             t.setBackgroundResource(R.drawable.resetbutton);
             t.setPadding((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 65, getResources().getDisplayMetrics()), (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 75, getResources().getDisplayMetrics()), 0, 0);
             t.setText("RESET");
-            t = (TextView)findViewById(R.id.sensorNotification);
-            t.setVisibility(View.VISIBLE);
+
+            boolean goReset = (newIntent != null) ? newIntent.getBooleanExtra("goReset", false): false;
+            if(goReset) {
+                t = (TextView) findViewById(R.id.sensorNotification);
+                t.setText("Waiting for data connection...");
+                t.setVisibility(View.VISIBLE);
+            }
         }
         t = (TextView)findViewById(R.id.sensorButton);
         t.setVisibility(View.VISIBLE);
@@ -282,6 +295,13 @@ public class ActivationActivity extends AppCompatActivity
 
         protected void onPostExecute(Integer result) {
             updateStatus = true;
+            boolean goReset = (newIntent != null) ? newIntent.getBooleanExtra("goReset", false): false;
+            if(goReset) {
+                TextView t = (TextView)findViewById(R.id.sensorNotification);
+                t.setText("Alert notification sent to contacts. If you are safe please update your status.");
+                t.setVisibility(View.VISIBLE);
+                newIntent.removeExtra("goReset");
+            }
         }
     }
 

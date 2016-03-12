@@ -92,9 +92,9 @@ public class ShakeSensorService extends Service implements SensorEventListener {
             SharedPreferencesHelper.setStringProperty(context, "status", "Alert");
             Vibrator v = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
             v.vibrate(1000);
-            Toast.makeText(context, "Device shake registered.", Toast.LENGTH_SHORT).show();
             this.lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, mLocationListener);
             this.lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, mLocationListener);
+
             Intent intent = new Intent(context, ActivationActivity.class);
             intent.putExtra("goReset", true);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -108,8 +108,14 @@ public class ShakeSensorService extends Service implements SensorEventListener {
 
             if (location != null) {
                 lm.removeUpdates(mLocationListener);
-                AlarmActivator activator = new AlarmActivator(context, String.valueOf(location.getLatitude()), String.valueOf(location.getLongitude()));
-                activator.start();
+
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        AlarmActivator activator = new AlarmActivator(context, String.valueOf(location.getLatitude()), String.valueOf(location.getLongitude()));
+                        activator.start();
+                    }
+                }).run();
             }
         }
 
