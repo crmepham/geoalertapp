@@ -73,7 +73,10 @@ public class ActivationActivity extends AppCompatActivity
     @Override
     protected void onResume() {
         super.onResume();
-        updateRemoteStatus();
+        boolean goReset = (newIntent != null) ? newIntent.getBooleanExtra("goReset", false): false;
+        if(goReset) {
+            updateRemoteStatus();
+        }
         setUpButton();
     }
 
@@ -275,6 +278,7 @@ public class ActivationActivity extends AppCompatActivity
                         tc.postForResponseCode("user/update/status");
                         break;
                     }
+                    Thread.sleep(BaseHelper.INTERVAL_ONE_MINUTE);
                 }
             } catch (Exception e) {
                 Log.e("", e.getMessage());
@@ -294,14 +298,14 @@ public class ActivationActivity extends AppCompatActivity
         }
 
         protected void onPostExecute(Integer result) {
-            updateStatus = true;
             boolean goReset = (newIntent != null) ? newIntent.getBooleanExtra("goReset", false): false;
             if(goReset) {
-                TextView t = (TextView)findViewById(R.id.sensorNotification);
-                t.setText("Alert notification sent to contacts. If you are safe please update your status.");
+                TextView t = (TextView) findViewById(R.id.sensorNotification);
+                t.setText("Alert notification sent to contacts. If you are safe please reset your status.");
                 t.setVisibility(View.VISIBLE);
                 newIntent.removeExtra("goReset");
             }
+            updateStatus = true;
         }
     }
 

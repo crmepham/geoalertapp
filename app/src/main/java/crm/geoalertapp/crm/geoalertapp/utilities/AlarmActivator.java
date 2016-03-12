@@ -1,11 +1,15 @@
 package crm.geoalertapp.crm.geoalertapp.utilities;
 
+import android.app.Activity;
 import android.content.Context;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
+import android.widget.TextView;
 
 import com.sun.jersey.core.util.MultivaluedMapImpl;
 
@@ -14,6 +18,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import javax.ws.rs.core.MultivaluedMap;
+
+import crm.geoalertapp.R;
 
 public class AlarmActivator extends Thread implements Runnable{
     String username;
@@ -43,7 +49,7 @@ public class AlarmActivator extends Thread implements Runnable{
             try {
                 if(BaseHelper.isInternetConnected(context)) {
                     updateLocation();
-                    updateRemoteStatus();
+                    //updateRemoteStatus();
                     notifyContacts();
                     break;
                 }
