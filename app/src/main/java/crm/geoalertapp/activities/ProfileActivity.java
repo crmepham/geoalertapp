@@ -301,7 +301,7 @@ public class ProfileActivity extends AppCompatActivity
         }
 
         protected void onPostExecute(byte[] result) {
-            if(result.length > 0) {
+            if(result != null && result.length > 0) {
 
                 try {
                    Bitmap bmp = BitmapFactory.decodeByteArray(result, 0, result.length);
@@ -386,6 +386,11 @@ public class ProfileActivity extends AppCompatActivity
                             b.setVisibility(View.VISIBLE);
                             b = (Button) findViewById(R.id.profileLocationButton);
                             BaseHelper.setMargins(b, 0, 0, 310, 0);
+                        }else{
+                            Button b = (Button) findViewById(R.id.profileEditButton);
+                            b.setVisibility(View.GONE);
+                            b = (Button) findViewById(R.id.profileLocationButton);
+                            BaseHelper.setMargins(b, 0, 0, 0, 0);
                         }
 
                         int count = l.getChildCount();

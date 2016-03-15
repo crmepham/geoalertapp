@@ -47,7 +47,6 @@ public class LocationActivity extends AppCompatActivity implements OnMapReadyCal
     private String longitude;
     private String lastUpdated;
     private String address;
-    private Long reloadInterval;
     private ReloadMap reloadMap;
     boolean firstLoad;
     private String number;
@@ -66,7 +65,6 @@ public class LocationActivity extends AppCompatActivity implements OnMapReadyCal
         intent = getIntent();
         number = intent.getStringExtra("number");
         zoom = 14;
-        reloadInterval = BaseHelper.INTERVAL_FIFTEEN_MINUTES;
         firstLoad = true;
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
@@ -194,10 +192,10 @@ public class LocationActivity extends AppCompatActivity implements OnMapReadyCal
         }
     }
 
-    private class ReloadMap extends Thread {
+    private class ReloadMap extends Thread implements Runnable{
         public void run() {
             try {
-                Thread.sleep(reloadInterval);
+                Thread.sleep(BaseHelper.INTERVAL_THIRTY_MINUTES);
                 reloadMap();
             } catch (InterruptedException e) {
                 Log.d("", e.getMessage());

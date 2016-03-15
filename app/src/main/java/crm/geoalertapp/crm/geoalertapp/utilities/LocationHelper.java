@@ -38,7 +38,7 @@ public class LocationHelper extends BaseHelper {
         @Override
         public void onLocationChanged(final Location location) {
 
-            if(location != null) {
+            if(BaseHelper.isInternetConnected(context) && location != null) {
                 UpdateLocationTask UpdateLocationTask = new UpdateLocationTask();
                 UpdateLocationTask.execute(SharedPreferencesHelper.getStringProperty(context, "username"), String.valueOf(location.getLatitude()), String.valueOf(location.getLongitude()));
                 lm.removeUpdates(mLocationListener);
@@ -69,8 +69,6 @@ public class LocationHelper extends BaseHelper {
     private class UpdateLocationTask extends AsyncTask<String, Integer, Integer> {
 
         protected Integer doInBackground(String... params) {
-
-            Integer responseCode = 0;
             try {
                 MultivaluedMap map = new MultivaluedMapImpl();
                 map.add("username", params[0]);
@@ -78,12 +76,12 @@ public class LocationHelper extends BaseHelper {
                 map.add("longitude", params[2]);
 
                 RestClient tc = new RestClient(map);
-                responseCode = tc.postForResponseCode("location/update");
+                tc.postForResponseCode("location/update");
             } catch (Exception e) {
                 e.printStackTrace();
             }
 
-            return responseCode;
+            return 0;
         }
     }
 }

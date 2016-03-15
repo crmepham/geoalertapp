@@ -1,6 +1,7 @@
 package crm.geoalertapp.activities;
 
 import android.app.ProgressDialog;
+import android.app.TaskStackBuilder;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -158,7 +159,7 @@ public class ContactsActivity extends AppCompatActivity
                 l.addView(retryButton);
             }
         }
-        LocationUpdateReceiver.SetAlarm(getApplicationContext(), BaseHelper.INTERVAL_THIRTY_MINUTES);
+        LocationUpdateReceiver.SetAlarm(getApplicationContext(), 500L);
     }
 
     public void pendingRequestsButton(View view) {
@@ -226,7 +227,7 @@ public class ContactsActivity extends AppCompatActivity
             SharedPreferencesHelper.removeKey(getApplicationContext(), "username");
             SharedPreferencesHelper.removeKey(getApplicationContext(), "loggedIn");
             intent = new Intent(ContactsActivity.this, LoginActivity.class);
-            startActivity(intent);
+            TaskStackBuilder.create(getApplicationContext()).addNextIntentWithParentStack(intent).startActivities();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

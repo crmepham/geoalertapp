@@ -16,8 +16,8 @@ android {
         applicationId "crm.geoalertapp"
         minSdkVersion 21
         targetSdkVersion 21
-        versionCode 16
-        versionName "1.14"
+        versionCode 19
+        versionName "1.17"
         multiDexEnabled true
     }
     buildTypes {

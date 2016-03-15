@@ -19,18 +19,10 @@ import static java.lang.Thread.sleep;
  */
 public class LocationUpdateReceiver extends BroadcastReceiver {
 
-    private static boolean waiting = false;
-
     @Override
-    public void onReceive(Context context, Intent intent) {if(!waiting) {
-            waiting = true;
-            while (true) {
-                if (BaseHelper.isInternetConnected(context)) {
-                    new LocationHelper(context);
-                    waiting = false;
-                    break;
-                }
-            }
+    public void onReceive(Context context, Intent intent) {
+        if (BaseHelper.isInternetConnected(context)) {
+            new LocationHelper(context);
         }
     }
 
