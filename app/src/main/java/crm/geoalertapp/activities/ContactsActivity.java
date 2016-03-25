@@ -159,7 +159,7 @@ public class ContactsActivity extends AppCompatActivity
                 l.addView(retryButton);
             }
         }
-        LocationUpdateReceiver.SetAlarm(getApplicationContext(), 500L);
+        LocationUpdateReceiver.SetAlarm(getApplicationContext(), BaseHelper.INTERVAL_ONE_HOUR);
     }
 
     public void pendingRequestsButton(View view) {

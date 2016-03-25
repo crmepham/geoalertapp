@@ -116,11 +116,9 @@ public class LoginActivity extends AppCompatActivity {
 
         protected void onPostExecute(Integer result) {
             progress.dismiss();
-            if(result == 200) {
+            if(result != null && result == 200) {
                 SharedPreferencesHelper.setBooleanProperty(getApplicationContext(), "loggedIn", true);
                 SharedPreferencesHelper.setStringProperty(getApplicationContext(), "username", username);
-                String test = SharedPreferencesHelper.getStringProperty(getApplicationContext(), "username");
-                String test2 = test;
 
                 if(SharedPreferencesHelper.getStringProperty(getApplicationContext(), "sensitivity").equals("")) {
                     SharedPreferencesHelper.setStringProperty(getApplicationContext(), "sensitivity", "16");
@@ -132,7 +130,7 @@ public class LoginActivity extends AppCompatActivity {
 
                 Intent intent = new Intent(LoginActivity.this, ContactsActivity.class);
                 startActivity(intent);
-            }else if(result == 401){
+            }else if(result != null && result == 401){
                 if(toast == null) {
                     toast = Toast.makeText(getApplicationContext(), "", Toast.LENGTH_SHORT);
                 }

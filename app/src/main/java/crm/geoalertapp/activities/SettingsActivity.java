@@ -185,7 +185,7 @@ public class SettingsActivity extends AppCompatActivity
 
     public void saveSettings(View view) {
         if(displayProfileMap.equals("Enabled")){
-            LocationUpdateReceiver.SetAlarm(this, BaseHelper.INTERVAL_THIRTY_MINUTES);
+            LocationUpdateReceiver.SetAlarm(this, BaseHelper.INTERVAL_ONE_HOUR);
         }else{
             LocationUpdateReceiver.CancelAlarm(this);
         }
