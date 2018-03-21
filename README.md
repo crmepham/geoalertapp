@@ -9,6 +9,8 @@
 A personal safety alert app that notifies friends when you are in trouble.
 </p>
 
+<p align="center"><a href="https://www.youtube.com/watch?v=2VOIHX8j99c">Video Demonstration</a></p>
+
 <hr>
 <p>
 Before you go out for the evening, or before your walk home, you can activate the GeoAlert sensor. Then if you are ever in trouble you can simply shake your phone and the alert will be activated, this will update your status and send a notification to all of your contacts. Your contacts can then see exactly where you activated the signal, and continue to track your location.</p>
